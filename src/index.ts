@@ -1,10 +1,10 @@
 class MicroTestRunner {
-	static candidate: Function;
-	static args = [] as any[][];
-	static conditions = [] as any[];
-	static runs = 1;
-	static currentRun = 0;
-	static passing = [] as boolean[];
+	private static candidate: Function;
+	private static args = [] as any[][];
+	private static conditions = [] as any[];
+	private static runs = 1;
+	private static currentRun = 0;
+	private static passing = [] as boolean[];
 
 	/**
 	 * Test an expression or function.
