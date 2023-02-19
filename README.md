@@ -23,7 +23,7 @@ const result = test(yourFunction)	// The expression or function you would like t
 
 if (result) {
 	// Your test passed.
+} else {
+	// Your test failed.
 }
-
-// The test-runner will throw an error if your test fails.
 ```
