@@ -57,7 +57,12 @@ class MicroTestRunner {
 		for (const [index, argumentGroup] of this.args.entries()) {
 			this.currentRun = 0;
 			while (this.currentRun < this.runs) {
-				const result = this.candidate.apply(undefined, argumentGroup);
+				let result = false;
+				try {
+					result = this.candidate.apply(undefined, argumentGroup);
+				} catch (error) {
+					console.warn('MicroTestRunner: Test failed.', error);
+				}
 				this.passing.push(result === this.conditions[index]);
 				this.currentRun++;
 			}
