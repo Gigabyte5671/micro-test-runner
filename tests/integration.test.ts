@@ -9,7 +9,7 @@ export default function integrationTest (): void {
 	const result = test(candidate)
 		.times(3)
 		.with([24, 48])
-		.expect(72);
+		.expect([72]);
 	
 	if (!result) {
 		throw new Error('Integration test failed.');

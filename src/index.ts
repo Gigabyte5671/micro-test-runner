@@ -1,19 +1,23 @@
 class MicroTestRunner {
-	private static candidate: Function;
-	private static args = [] as any[][];
-	private static conditions = [] as any[];
-	private static runs = 1;
-	private static currentRun = 0;
-	private static passing = [] as boolean[];
+	private candidate: Function;
+	private args = [] as any[][];
+	private conditions = [] as any[];
+	private runs = 1;
+	private currentRun = 0;
+	private passing = [] as boolean[];
+
+	constructor (candidate: Function) {
+		this.candidate = candidate;
+	}
 
 	/**
 	 * Test an expression or function.
 	 * @param candidate The expression/function to test.
 	 * @returns The test-runner.
 	 */
-	static test (candidate: Function): typeof MicroTestRunner {
-		MicroTestRunner.candidate = candidate;
-		return MicroTestRunner;
+	static test (candidate: Function): MicroTestRunner {
+		const newTestRunner = new MicroTestRunner(candidate);
+		return newTestRunner;
 	}
 
 	/**
@@ -21,31 +25,26 @@ class MicroTestRunner {
 	 * @param number The number of times to run each test.
 	 * @returns 
 	 */
-	static times (number: number): typeof MicroTestRunner {
-		MicroTestRunner.runs = number > 0 ? Math.ceil(number) : 1;
-		return MicroTestRunner;
+	times (number: number): MicroTestRunner {
+		this.runs = number > 0 ? Math.ceil(number) : 1;
+		return this;
 	}
 
 	/**
 	 * Provide arguments to the candidate.
 	 * @param args 
 	 */
-	static with (args: Array<any>): typeof MicroTestRunner {
-		MicroTestRunner.args.push(args);
-		return MicroTestRunner;
+	with (args: Array<any>): MicroTestRunner {
+		this.args.push(args);
+		return this;
 	}
 
-	/**
-	 * The result to expect from the test.
-	 * @param condition The expected result.
-	 */
-	static expect (condition: any): boolean
 	/**
 	 * The results to expect from each test.
 	 * @param conditions An array of expected results.
 	 * @returns 
 	 */
-	static expect (conditions: Array<any>): boolean {
+	expect (conditions: Array<any>): boolean {
 		if (Array.isArray(conditions)) {
 			this.conditions = conditions;
 		} else {
@@ -57,7 +56,7 @@ class MicroTestRunner {
 		for (const [index, argumentGroup] of this.args.entries()) {
 			this.currentRun = 0;
 			while (this.currentRun < this.runs) {
-				let result = false;
+				let result = undefined;
 				try {
 					result = this.candidate.apply(undefined, argumentGroup);
 				} catch (error) {
