@@ -38,6 +38,7 @@ Specify the results you expect your function to return from each test:
 ```javascript
 testRunner.expect([result1, result2, result3, etc...]);
 ```
+Calling `.expect` will also run the test.
 
 ## Example
 
@@ -45,10 +46,10 @@ testRunner.expect([result1, result2, result3, etc...]);
 import test from 'micro-test-runner';
 import { yourFunction } from './yourProject';
 
-const result = test(yourFunction)	// The expression or function you would like to test.
-	.times(3)			// Run the test 3 times.
-	.with(['Hello', 'world!'])	// Pass any arguments you would like to test your function with.
-	.expect(['Hello world!'])		// The result you expect your expression/function to return.
+const result = test(yourFunction)	// Test `yourFunction`...
+	.times(3)			// 3 times...
+	.with(['Hello', 'world!'])	// With these arguments...
+	.expect(['Hello world!']);	// And expect these results.
 
 if (result) {
 	// Your test passed.
