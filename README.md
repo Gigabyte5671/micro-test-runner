@@ -38,7 +38,7 @@ Specify the results you expect your function to return from each test:
 ```javascript
 testRunner.expect([result1, result2, result3, etc...]);
 ```
-Calling `.expect` will also run the test.
+Calling `.expect` will also run the test, returning `true` if your function passes, `false` if not.
 
 ## Example
 
