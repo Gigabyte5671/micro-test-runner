@@ -62,7 +62,12 @@ class MicroTestRunner {
 				} catch (error) {
 					console.warn('MicroTestRunner: Test failed.', error);
 				}
-				this.passing.push(result === this.conditions[index]);
+				const condition = this.conditions[index];
+				if (typeof condition === 'function') {
+					this.passing.push(condition(result));
+				} else {
+					this.passing.push(result === this.conditions[index]);
+				}
 				this.currentRun++;
 			}
 		}

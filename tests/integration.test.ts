@@ -9,7 +9,8 @@ export default function integrationTest (): void {
 	const result = test(candidate)
 		.times(3)
 		.with([24, 48])
-		.expect([72]);
+		.with([162, 5])
+		.expect([72, (value: number) => (/[0-9]+/u).test(value.toString())]);
 	
 	if (!result) {
 		throw new Error('Integration test failed.');

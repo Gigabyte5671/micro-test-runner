@@ -38,6 +38,10 @@ Specify the results you expect your function to return from each test:
 ```javascript
 testRunner.expect([result1, result2, result3, etc...]);
 ```
+If a function is passed as an expected result, it will be evaluated on the value that the candidate returned for that particular test. This function should then return a boolean indicating whether the value was correct or not. For example:
+```javascript
+testRunner.expect([result1, result2, (value) => (/[0-9]+/u).test(value)]);
+```
 Calling `.expect` will also run the test, returning `true` if your function passes, `false` if not.
 
 ## Example
