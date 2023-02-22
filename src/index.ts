@@ -1,7 +1,7 @@
 class MicroTestRunner {
 	private candidate: Function;
-	private args = [] as any[][];
-	private conditions = [] as any[];
+	private args = [] as unknown[][];
+	private conditions = [] as unknown[];
 	private runs = 1;
 	private currentRun = 0;
 	private passing = [] as boolean[];
@@ -34,7 +34,7 @@ class MicroTestRunner {
 	 * Provide arguments to the candidate.
 	 * @param args 
 	 */
-	with (args: Array<any>): MicroTestRunner {
+	with (args: Array<unknown>): MicroTestRunner {
 		this.args.push(args);
 		return this;
 	}
@@ -44,7 +44,7 @@ class MicroTestRunner {
 	 * @param conditions An array of expected results.
 	 * @returns 
 	 */
-	expect (conditions: Array<any>): boolean {
+	expect (conditions: Array<unknown>): boolean {
 		if (Array.isArray(conditions)) {
 			this.conditions = conditions;
 		} else {
@@ -58,7 +58,7 @@ class MicroTestRunner {
 			while (this.currentRun < this.runs) {
 				let result = undefined;
 				try {
-					result = this.candidate.apply(undefined, argumentGroup);
+					result = this.candidate.apply(undefined, argumentGroup) as unknown;
 				} catch (error) {
 					console.warn('MicroTestRunner: Test failed.', error);
 				}
