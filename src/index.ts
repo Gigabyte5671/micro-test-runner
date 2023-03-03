@@ -72,7 +72,8 @@ class MicroTestRunner {
 			}
 		}
 
-		return this.passing.reduce((previousValue, currentValue) => previousValue && currentValue);
+		// Return false if any one of the tests failed.
+		return !this.passing.includes(false);
 	}
 }
 
