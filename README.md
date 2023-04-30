@@ -56,7 +56,12 @@ If a function is passed as an expected result, it will be evaluated on the value
 ```javascript
 testRunner.expect([result1, result2, (value) => (/[0-9]+/u).test(value)]);
 ```
+
+## Results
+
 Calling `.expect` will also run the test, returning `true` if your function passes, `false` if not.
+
+If your function is asynchronous, you will need to `await` this value or use `.then()`.
 
 ## Examples
 
@@ -93,4 +98,24 @@ if (result) {
 } else {
 	// Your test failed.
 }
+```
+
+Promise:
+
+```javascript
+import test from 'micro-test-runner';
+import { apiCall } from './yourProject';
+
+const result = test(apiCall)				// Test your `apiCall` function...
+	.async()					// Asynchronously...
+	.times(3)					// 3 times...
+	.with(['https://example.com/api', '/endpoint'])	// With these arguments...
+	.expect([{ data: 'Hello world!' }])		// And expect these results.
+	.then(result => {
+		if (result) {
+			// Your test passed.
+		} else {
+			// Your test failed.
+		}
+	});
 ```
