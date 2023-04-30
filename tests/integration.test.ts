@@ -2,11 +2,12 @@ import test from '../src/index';
 
 export default function integrationTest (): void {
 
-	function candidate (a: number, b: number) {
+	function candidate (a: number, b: number): number {
 		return a + b;
 	}
 
-	const result = test(candidate)
+	const result =
+		test(candidate)
 		.times(3)
 		.with([24, 48])
 		.with([162, 5])
