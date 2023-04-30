@@ -26,7 +26,12 @@ Create a new test-runner with:
 const testRunner = test(yourFunction);
 ```
 
-Specify the arguents to pass into your function with:
+If your function is asynchronous, chain the `.async` method:
+```javascript
+testRunner.async();
+```
+
+Specify the arguents to pass into your function:
 ```javascript
 testRunner.with([arg1, arg2, arg3, etc...]);
 ```
@@ -63,6 +68,25 @@ const result = test(yourFunction)	// Test `yourFunction`...
 	.times(3)			// 3 times...
 	.with(['Hello', 'world!'])	// With these arguments...
 	.expect(['Hello world!']);	// And expect these results.
+
+if (result) {
+	// Your test passed.
+} else {
+	// Your test failed.
+}
+```
+
+Async:
+
+```javascript
+import test from 'micro-test-runner';
+import { apiCall } from './yourProject';
+
+const result = await test(apiCall)	// Test your `apiCall` function...
+	.async()				// Asynchronously...
+	.times(3)				// 3 times...
+	.with(['https://example.com/api', '/endpoint'])	// With these arguments...
+	.expect([{ data: 'Hello world!' }]);	// And expect these results.
 
 if (result) {
 	// Your test passed.
