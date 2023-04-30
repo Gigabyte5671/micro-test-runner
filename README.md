@@ -10,6 +10,15 @@ A minimal JavaScript test runner.
 npm install micro-test-runner
 ```
 
+Include Micro Test-Runner in your project with:
+```javascript
+import test from 'micro-test-runner';
+
+// Or
+
+const test = require('micro-test-runner');
+```
+
 ## Usage
 
 Create a new test-runner with:
