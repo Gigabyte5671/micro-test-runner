@@ -58,7 +58,7 @@ testRunner.expect([result1, result2, (value) => (/[0-9]+/u).test(value)]);
 ```
 Calling `.expect` will also run the test, returning `true` if your function passes, `false` if not.
 
-## Example
+## Examples
 
 ```javascript
 import test from 'micro-test-runner';
@@ -82,11 +82,11 @@ Async:
 import test from 'micro-test-runner';
 import { apiCall } from './yourProject';
 
-const result = await test(apiCall)	// Test your `apiCall` function...
-	.async()				// Asynchronously...
-	.times(3)				// 3 times...
+const result = await test(apiCall)			// Test your `apiCall` function...
+	.async()					// Asynchronously...
+	.times(3)					// 3 times...
 	.with(['https://example.com/api', '/endpoint'])	// With these arguments...
-	.expect([{ data: 'Hello world!' }]);	// And expect these results.
+	.expect([{ data: 'Hello world!' }]);		// And expect these results.
 
 if (result) {
 	// Your test passed.
