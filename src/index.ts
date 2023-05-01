@@ -1,6 +1,6 @@
-class MicroTestRunner <Async extends boolean> {
+class MicroTestRunner <Async extends 'sync' | 'async'> {
 	private candidate: Function;
-	private asynchronous = false as Async;
+	private asynchronous = 'sync' as Async;
 	private args = [] as unknown[][];
 	private conditions = [] as unknown[];
 	private runs = 1;
@@ -16,16 +16,16 @@ class MicroTestRunner <Async extends boolean> {
 	 * @param candidate The expression/function to test.
 	 * @returns The test-runner.
 	 */
-	static test (candidate: Function): MicroTestRunner<false> {
-		return new MicroTestRunner<false>(candidate);
+	static test (candidate: Function): MicroTestRunner<'sync'> {
+		return new MicroTestRunner<'sync'>(candidate);
 	}
 
 	/**
 	 * Run each test asynchronously.
 	 */
-	async (): MicroTestRunner<true> {
-		this.asynchronous = true as Async;
-		return this as MicroTestRunner<true>;
+	async (): MicroTestRunner<'async'> {
+		this.asynchronous = 'async' as Async;
+		return this as MicroTestRunner<'async'>;
 	}
 
 	/**
@@ -51,7 +51,7 @@ class MicroTestRunner <Async extends boolean> {
 	 * @param conditions An array of expected results.
 	 * @returns `true` if all test runs passed, `false` if any run failed.
 	 */
-	expect (conditions: Array<unknown>): Async extends true ? Promise<boolean> : boolean {
+	expect (conditions: Array<unknown>): Async extends 'async' ? Promise<boolean> : boolean {
 		const promise = new Promise<boolean>( async (resolve) => {
 			if (Array.isArray(conditions)) {
 				this.conditions = conditions;
@@ -88,7 +88,7 @@ class MicroTestRunner <Async extends boolean> {
 		});
 
 		// Return false if any one of the tests failed.
-		return (this.asynchronous ? promise : !this.passing.includes(false)) as Async extends true ? Promise<boolean> : boolean;
+		return (this.asynchronous === 'async' ? promise : !this.passing.includes(false)) as Async extends 'async' ? Promise<boolean> : boolean;
 	}
 }
 
