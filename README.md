@@ -31,6 +31,21 @@ If your function is asynchronous, chain the `.async` method:
 testRunner.async();
 ```
 
+If your function requires a specific context (`this`), chain the `.context` method:
+```javascript
+class YourClass {
+	public static c = 17;
+	
+	public static yourFunction (a, b) {
+		return a + b + this.c;
+	}
+}
+
+// ...
+
+testRunner.context(YourClass);
+```
+
 Specify the arguents to pass into your function:
 ```javascript
 testRunner.with([arg1, arg2, arg3, etc...]);
