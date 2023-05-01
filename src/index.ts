@@ -1,6 +1,7 @@
 class MicroTestRunner <Async extends 'sync' | 'async'> {
 	private candidate: Function;
 	private asynchronous = 'sync' as Async;
+	private candidateContext: any;
 	private args = [] as unknown[][];
 	private conditions = [] as unknown[];
 	private runs = 1;
@@ -26,6 +27,15 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	async (): MicroTestRunner<'async'> {
 		this.asynchronous = 'async' as Async;
 		return this as MicroTestRunner<'async'>;
+	}
+
+	/**
+	 * Run the candidate function within a given context. Useful if the candidate needs access to a particular `this`.
+	 * @param context The context.
+	 */
+	context (context: any): MicroTestRunner<Async> {
+		this.candidateContext = context;
+		return this;
 	}
 
 	/**
@@ -66,7 +76,7 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 				while (this.currentRun < this.runs) {
 					let result = undefined;
 					try {
-						result = this.candidate.apply(undefined, argumentGroup);
+						result = this.candidate.apply(this.candidateContext, argumentGroup);
 						if (this.asynchronous) {
 							result = await Promise.resolve(result);
 						}
