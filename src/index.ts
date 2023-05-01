@@ -43,7 +43,7 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	 * @param number The number of times to run each test.
 	 */
 	times (number: number): MicroTestRunner<Async> {
-		this.runs = number > 0 ? Math.ceil(number) : 1;
+		this.runs = Math.max(Math.ceil(number), 1);
 		return this;
 	}
 
