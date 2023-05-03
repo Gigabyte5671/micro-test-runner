@@ -1,4 +1,4 @@
-import test from '../src/index';
+import test from '../src/index.js';
 
 export default function contextTest (): void {
 
