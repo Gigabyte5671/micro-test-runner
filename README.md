@@ -78,6 +78,18 @@ Calling `.expect` will also run the test, returning `true` if your function pass
 
 If your function is asynchronous, you will need to `await` this value or use `.then()`.
 
+Alternately, if you'd like Micro Test-Runner to log the results for you, you can chain the `.logging()` method.
+```javascript
+import test, { FailureLogSeverity } from 'micro-test-runner';
+
+test(yourFunction)						// Test `yourFunction`...
+	.times(3)								// 3 times...
+	.logging('Function Name', FailureLogSeverity.WARN, ['✅', '❌']) // Logging the result...
+	.with(['Hello', 'world!'])					// With these arguments...
+	.expect(['Hello world!']);					// And expect these results.
+```
+This can remove the need to handle the value returned from `.expect()`.
+
 ## Examples
 
 ```javascript
