@@ -7,6 +7,7 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	private runs = 1;
 	private currentRun = 0;
 	private passing = [] as boolean[];
+	private result = false;
 
 	constructor (candidate: Function) {
 		this.candidate = candidate;
@@ -62,43 +63,82 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	 * @returns `true` if all test runs passed, `false` if any run failed.
 	 */
 	expect (conditions: Array<unknown>): Async extends 'async' ? Promise<boolean> : boolean {
-		const promise = new Promise<boolean>( async (resolve) => {
-			if (Array.isArray(conditions)) {
-				this.conditions = conditions;
-			} else {
-				this.conditions.push(conditions);
-			}
-			if (this.args.length <= 0) {
-				this.args.push([]);
-			}
-			for (const [index, argumentGroup] of this.args.entries()) {
-				this.currentRun = 0;
-				while (this.currentRun < this.runs) {
-					let result = undefined;
-					try {
-						result = this.candidate.apply(this.candidateContext, argumentGroup);
-						if (this.asynchronous) {
-							result = await Promise.resolve(result);
-						}
-					} catch (error) {
-						console.warn('MicroTestRunner: Test failed.', error);
-					}
-					const condition = this.conditions[index];
-					if (typeof condition === 'function') {
-						this.passing.push(condition(result));
-					} else {
-						this.passing.push(result === this.conditions[index]);
-					}
-					this.currentRun++;
+		// Asynchronous:
+		if (this.asynchronous === 'async') {
+			const promise = new Promise<boolean>( async (resolve) => {
+				if (Array.isArray(conditions)) {
+					this.conditions = conditions;
+				} else {
+					this.conditions.push(conditions);
 				}
+				if (this.args.length <= 0) {
+					this.args.push([]);
+				}
+				for (const [index, argumentGroup] of this.args.entries()) {
+					this.currentRun = 0;
+					while (this.currentRun < this.runs) {
+						let result = false;
+						try {
+							result = this.candidate.apply(this.candidateContext, argumentGroup);
+							if (this.asynchronous) {
+								result = await Promise.resolve(result);
+							}
+						} catch (error) {
+							console.warn('MicroTestRunner: Run failed.', error);
+						}
+						const condition = this.conditions[index];
+						if (typeof condition === 'function') {
+							this.passing.push(condition(result));
+						} else {
+							this.passing.push(result === this.conditions[index]);
+						}
+						this.currentRun++;
+					}
+				}
+	
+				// Return false if any one of the tests failed.
+				this.result = !this.passing.includes(false);
+				resolve(this.result);
+			});
+	
 			}
 
-			// Return false if any one of the tests failed.
-			resolve(!this.passing.includes(false));
-		});
+			// Return a reference to the promise.
+			return promise as Async extends 'async' ? Promise<boolean> : boolean;
+		}
+
+		// Synchronous:
+		if (Array.isArray(conditions)) {
+			this.conditions = conditions;
+		} else {
+			this.conditions.push(conditions);
+		}
+		if (this.args.length <= 0) {
+			this.args.push([]);
+		}
+		for (const [index, argumentGroup] of this.args.entries()) {
+			this.currentRun = 0;
+			while (this.currentRun < this.runs) {
+				let result = false;
+				try {
+					result = this.candidate.apply(this.candidateContext, argumentGroup);
+				} catch (error) {
+					console.warn('MicroTestRunner: Run failed.', error);
+				}
+				const condition = this.conditions[index];
+				if (typeof condition === 'function') {
+					this.passing.push(condition(result));
+				} else {
+					this.passing.push(result === this.conditions[index]);
+				}
+				this.currentRun++;
+			}
+		}
 
 		// Return false if any one of the tests failed.
-		return (this.asynchronous === 'async' ? promise : !this.passing.includes(false)) as Async extends 'async' ? Promise<boolean> : boolean;
+		this.result = !this.passing.includes(false);
+
+		return this.result as Async extends 'async' ? Promise<boolean> : boolean;
 	}
 }
 
