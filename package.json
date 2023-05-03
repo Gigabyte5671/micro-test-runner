@@ -6,7 +6,8 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "npx ts-node tests/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "publish": "tsc && publish"
   },
   "repository": {
     "type": "git",
