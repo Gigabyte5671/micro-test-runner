@@ -14,8 +14,8 @@ export default function integrationTest (): void {
 		.expect([72, (value: number) => (/[0-9]+/u).test(value.toString())]);
 	
 	if (!result) {
-		throw new Error('Integration test failed.');
+		throw new Error('✕ Integration test failed.');
 	}
 	
-	console.log('Integration test passed.');
+	console.log('✓ Integration test passed.');
 }

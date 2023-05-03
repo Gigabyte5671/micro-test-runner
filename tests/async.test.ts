@@ -8,18 +8,18 @@ export default function asyncTest (): void {
 		});
 	}
 
-	const result =
-		test(candidate)
+	test(candidate)
+		.logging('Async Logging', 2)
 		.async()
 		.times(6)
 		.with([24, 48])
 		.with([162, 5])
 		.expect([72, (value: number) => (/[0-9]+/u).test(value.toString())])
-		.then(() => {
+		.then(result => {
 			if (!result) {
-				throw new Error('Async test failed.');
+				throw new Error('✕ Async test failed.');
 			}
 			
-			console.log('Async test passed.');
+			console.log('✓ Async test passed.');
 		});
 }
