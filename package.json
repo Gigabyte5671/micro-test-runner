@@ -8,7 +8,7 @@
   "scripts": {
     "test": "tsc --build tsconfig.test.json && node test_build/tests/index.js",
     "build": "tsc --build tsconfig.json",
-    "publish": "tsc --build tsconfig.json && publish"
+    "publish": "tsc --build tsconfig.json && npm publish"
   },
   "repository": {
     "type": "git",
