@@ -58,7 +58,7 @@ testRunner.with([arg1, arg2])	// Test 1.
           .with([argX, argY])	// Test 3.
 ```
 
-(Optional) Specify the number of times to run each test:
+Optionally, specify the number of times to run each test:
 ```javascript
 testRunner.times(5);	// Will run each of the sequential tests 5 times.
 ```
