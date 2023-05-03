@@ -1,5 +1,7 @@
 /.github
 /node_modules
+/test_build
 /tests
 logo.ai
 logo.svg
+tsconfig.test.json
