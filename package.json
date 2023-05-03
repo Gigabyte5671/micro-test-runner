@@ -4,6 +4,7 @@
   "description": "A minimal JavaScript test runner.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "type": "module",
   "scripts": {
     "test": "npx ts-node tests/index.ts",
     "build": "tsc",
