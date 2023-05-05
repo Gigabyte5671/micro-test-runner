@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Micro Test-Runner</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="logo.css">
+</head>
+
+<body>
+	<header>
+		<a href="/">
+			<div class="logo" style="margin: -55px;transform: scale(0.4);">
+				<div class="bezel">
+					<div class="outer"></div>
+					<div class="inner"></div>
+				</div>
+				<div class="lens"></div>
+				<div class="text">
+					<span>M</span><span>i</span><span>c</span><span>r</span><span>o</span>
+					<span>T</span><span>e</span><span>s</span><span>t</span><span>-</span>
+					<span>R</span><span>u</span><span>n</span><span>n</span><span>e</span><span>r</span>
+					<span>&bull;</span>
+					<span>1</span><span>5</span><span>0</span><span>&times;</span>
+					<span>M</span><span>a</span><span>g</span><span>n</span><span>i</span><span>f</span><span>i</span><span>c</span><span>a</span><span>t</span><span>i</span><span>o</span><span>n</span>
+					<span>&bull;</span>
+					<span>A</span><span>s</span><span>y</span><span>n</span><span>c</span>
+					<span>&bull;</span>
+				</div>
+			</div>
+			<h1>Micro Test-Runner</h1>
+		</a>
+		<p>Simple, semantic unit tester for JS and TS.</p>
+	</header>
+
+	<main>
+		<input type="radio" id="simple_tab" name="examples" checked>
+		<input type="radio" id="logging_tab" name="examples">
+		<input type="radio" id="async_tab" name="examples">
+		<input type="radio" id="context_tab" name="examples">
+
+		<nav class="tabs">
+			<label for="simple_tab">Simple</label>
+			<label for="logging_tab">Logging</label>
+			<label for="async_tab">Async</label>
+			<label for="context_tab">Context</label>
+		</nav>
+
+		<div class="panels">
+			<div class="panel">
+				<p><span class="op">import</span> <span class="arg">test</span> <span class="op">from</span> <span class="string">'micro-test-runner'</span>;</p>
+				<p><span class="op">import</span> { <span class="arg">yourFunction</span> } <span class="op">from</span> <span class="string">'yourProject'</span>;</p>
+				<br>
+				<p><span class="faint">console.log(</span></p>
+				<br>
+				<!-- <p><span class="key">const</span> <span class="const">result</span> = <span class="function">test</span>()</p> -->
+				<p><span class="function">test</span>(<span class="arg">yourFunction</span>)<span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment">// Test yourFunction...</span></p>
+				<p><span class="indent"></span>.<span class="function">times</span>(<span class="number">3</span>)<span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span> <span class="comment">// Three times...</span></p>
+				<p><span class="indent"></span>.<span class="function">with</span>([<span class="string">'Hello'</span>, <span class="string">'world'</span>])<span class="indent"></span><span class="comment"> // With these arguments...</span></p>
+				<p><span class="indent"></span>.<span class="function">expect</span>([<span class="string">'Hello world'</span>])<span class="indent"></span><span class="indent"></span><span class="comment">// And expect these results.</span></p>
+				<br>
+				<p><span class="faint">);</span></p>
+			</div>
+			<div class="panel">
+				<p><span class="op">import</span> <span class="arg">test</span> <span class="op">from</span> <span class="string">'micro-test-runner'</span>;</p>
+				<p><span class="op">import</span> { <span class="arg">yourFunction</span> } <span class="op">from</span> <span class="string">'yourProject'</span>;</p>
+				<br>
+				<br>
+				<p><span class="function">test</span>(<span class="arg">yourFunction</span>)</p>
+				<p class="highlighted"><span class="indent"></span>.<span class="function">logging</span>(<span class="string">'Awesome'</span>)<span class="indent"></span></p>
+				<p><span class="indent"></span>.<span class="function">with</span>([])</p>
+				<p><span class="indent"></span>.<span class="function">expect</span>([]);</p>
+			</div>
+			<div class="panel">
+				<p><span class="op">import</span> <span class="arg">test</span> <span class="op">from</span> <span class="string">'micro-test-runner'</span>;</p>
+				<p><span class="op">import</span> { <span class="arg">apiCall</span> } <span class="op">from</span> <span class="string">'yourProject'</span>;</p>
+				<br>
+				<br>
+				<p><span class="op">await</span> <span class="function">test</span>(<span class="arg">yourFunction</span>)</p>
+				<p class="highlighted"><span class="indent"></span>.<span class="function">async</span>()<span class="indent"></span></p>
+				<p><span class="indent"></span>.<span class="function">logging</span>()</p>
+				<p><span class="indent"></span>.<span class="function">with</span>([])</p>
+				<p><span class="indent"></span>.<span class="function">expect</span>([]);</p>
+			</div>
+			<div class="panel">
+				<p><span class="op">import</span> <span class="arg">test</span> <span class="op">from</span> <span class="string">'micro-test-runner'</span>;</p>
+				<p><span class="op">import</span> <span class="class">YourClass</span> <span class="op">from</span> <span class="string">'yourProject'</span>;</p>
+				<br>
+				<br>
+				<p><span class="function">test</span>(<span class="arg"><span class="class">YourClass</span>.<span class="function">method</span></span>)</p>
+				<p class="highlighted"><span class="indent"></span>.<span class="function">context</span>(<span class="class">YourClass</span>)<span class="indent"></span></p>
+				<p><span class="indent"></span>.<span class="function">logging</span>()</p>
+				<p><span class="indent"></span>.<span class="function">with</span>([])</p>
+				<p><span class="indent"></span>.<span class="function">expect</span>([]);</p>
+			</div>
+		</div>
+
+		<div class="results">
+			<p>Result</p>
+			<div class="panel">
+				<p><span class="faint">pass ></span> <span class="key">true</span></p>
+				<p><span class="faint">fail ></span> <span class="key">false</span></p>
+			</div>
+			<div class="panel">
+				<p><span class="faint">pass ></span> ✓ Awesome test passed.</p>
+				<p><span class="faint">fail ></span> ✕ Awesome test failed.</p>
+			</div>
+			<div class="panel">
+				<p><span class="faint">pass ></span> ✓ Awesome test passed.</p>
+				<p><span class="faint">fail ></span> ✕ Awesome test failed.</p>
+			</div>
+			<div class="panel">
+				<p><span class="faint">pass ></span> ✓ Awesome test passed.</p>
+				<p><span class="faint">fail ></span> ✕ Awesome test failed.</p>
+			</div>
+		</div>
+
+		<p style="margin-top: 3rem;text-align: center;">Bam! It's just that easy 💥</p>
+	</main>
+
+	<footer>
+		<div class="badges">
+			<img src="https://img.shields.io/bundlephobia/min/micro-test-runner" height="20" alt="">
+			<img src="https://img.shields.io/npm/dt/micro-test-runner" height="20" alt="">
+			<a href="https://github.com/Gigabyte5671/micro-test-runner">
+				<img src="https://cdn.simpleicons.org/github/white" width="28" alt="GitHub Repo">
+			</a>
+			<a href="https://www.npmjs.com/package/micro-test-runner">
+				<img src="https://cdn.simpleicons.org/npm/white" width="28" alt="Package">
+			</a>
+			<!-- <img src="https://github.com/gigabyte5671/micro-test-runner/actions/workflows/node-tests.yml/badge.svg?branch=main" alt=""> -->
+		</div>
+	</footer>
+</body>
+</html>
