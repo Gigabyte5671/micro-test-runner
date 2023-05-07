@@ -23,6 +23,7 @@ body {
 	flex-direction: column;
 	gap: 3rem;
 	margin: auto;
+	padding-top: 3rem;
 	padding-bottom: 5rem;
 	color: var(--color-text);
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
