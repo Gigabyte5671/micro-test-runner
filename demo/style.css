@@ -11,21 +11,24 @@
 }
 
 html {
+	display: flex;
+	flex-direction: column;
+	place-items: center;
+	align-content: center;
 	height: 100%;
 }
 
 body {
-	display: grid;
-	place-items: center;
-	align-content: center;
+	display: flex;
+	flex-direction: column;
 	gap: 3rem;
-	height: 100%;
-	margin: 0;
+	margin: auto;
 	padding-bottom: 5rem;
 	color: var(--color-text);
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	background-color: var(--color-background);
 	background: radial-gradient(circle at center, #2d2d2d, var(--color-background));
+	background-attachment: fixed;
 }
 
 header {
@@ -65,6 +68,39 @@ h1 {
 	margin-top: 2.5rem;
 }
 
+button {
+	padding: 0.1em 0.2em;
+	font-size: 1rem;
+	background-color: var(--color-background);
+	border: 1px solid #fff1;
+	border-radius: 5px;
+	cursor: pointer;
+}
+button:hover {
+	border: 1px solid #fff4;
+}
+button > img {
+	display: block;
+	width: 1.5em;
+	height: 1.5em;
+	filter: invert(1);
+}
+button > img:nth-of-type(2) {
+	display: none;
+}
+
+p.code {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 1.5ch;
+	padding: 0.5em 1em;
+	font-family: Consolas, 'Courier New', monospace;
+	background-color: var(--color-background);
+	border: 1px solid #fff2;
+	border-radius: 10px;
+}
 p.highlighted {
 	background-color: #ffffff0a;
 	border-radius: 10px;
@@ -111,6 +147,9 @@ span.comment {
 }
 span.faint {
 	color: #fff4;
+}
+span.error {
+	color: #f14c4c;
 }
 
 .tabs {
@@ -168,8 +207,8 @@ input[type="radio"] {
 	flex-flow: column nowrap;
 	justify-content: flex-start;
 	align-items: flex-start;
-	min-width: 64ch;
-	min-height: 19em;
+	min-width: 67ch;
+	min-height: 22em;
 	padding: 1em 1.5em;
 	font-family: Consolas, 'Courier New', monospace;
 	font-size: large;
