@@ -17,6 +17,10 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	private conditions = [] as unknown[];
 	private runs = 1;
 	private currentRun = 0;
+	private performance = {
+		enabled: false,
+		measurements: [] as { start: number, end: number }[][]
+	};
 	private passing = [] as boolean[];
 	private result = false;
 
@@ -25,7 +29,23 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	}
 
 	private get logMessage (): string {
-		return `${this.result ? this.log.icons[0] : this.log.icons[1]} ${this.log.name} test ${this.result ? 'passed' : 'failed'}.`;
+		let performanceMessage = '';
+		if (this.result && this.performance.enabled && this.performance.measurements.length > 0) {
+			const startTimestamp = this.performance.measurements[0][0].start;
+			const endTimestamp = this.performance.measurements[this.performance.measurements.length - 1][this.performance.measurements[this.performance.measurements.length - 1].length - 1].end;
+			const testDuration = Number(endTimestamp - startTimestamp);
+			let averageRunDuration = 0;
+			let totalRuns = 0;
+			for (const test of this.performance.measurements) {
+				for (const run of test) {
+					averageRunDuration += run.end - run.start;
+					totalRuns++;
+				}
+			}
+			averageRunDuration = Number(averageRunDuration / totalRuns);
+			performanceMessage = ` in ${testDuration.toFixed(3)}ms${ totalRuns > 1 ? ` (average ${averageRunDuration.toFixed(3)}ms per run, over ${totalRuns} runs)` : ''}`;
+		}
+		return `${this.result ? this.log.icons[0] : this.log.icons[1]} ${this.log.name} test ${this.result ? 'passed' : 'failed'}${performanceMessage}.`;
 	}
 
 	private logResult (): void {
@@ -61,14 +81,16 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	 * • `2 - throw`
 	 * @param icons `(Optional)` Icons to use to indicate the outcome of the test.
 	 * Default: `['✓', '✕']`.
+	 * @param performance `(Optional)` Log the performance of each test run.
 	 * @returns 
 	 */
-	logging (name: string, severity = FailureLogSeverity.LOG, icons?: [string, string]): MicroTestRunner<Async> {
+	logging (name: string, severity = FailureLogSeverity.LOG, icons?: [string, string], performance = false): MicroTestRunner<Async> {
 		this.log.name = name;
 		this.log.severity = severity;
 		if (Array.isArray(icons) && icons.length === 2) {
 			this.log.icons = icons;
 		}
+		this.performance.enabled = performance && Boolean(globalThis.performance);
 		return this;
 	}
 
@@ -127,9 +149,16 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 			const promise = new Promise<boolean>( async (resolve) => {
 				for (const [index, argumentGroup] of this.args.entries()) {
 					this.currentRun = 0;
+					this.performance.measurements.push([]);
 					while (this.currentRun < this.runs) {
 						try {
+							if (this.performance.enabled) {
+								this.performance.measurements[index].push({ start: performance.now(), end: 0 });
+							}
 							const runResult = await Promise.resolve(this.candidate.apply(this.candidateContext, argumentGroup));
+							if (this.performance.enabled) {
+								this.performance.measurements[index][this.currentRun].end = performance.now();
+							}
 							const condition = this.conditions[index];
 							this.passing.push(typeof condition === 'function' ? condition(runResult) : runResult === condition);
 						} catch (error) {
@@ -155,9 +184,16 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 		// Synchronous:
 		for (const [index, argumentGroup] of this.args.entries()) {
 			this.currentRun = 0;
+			this.performance.measurements.push([]);
 			while (this.currentRun < this.runs) {
 				try {
+					if (this.performance.enabled) {
+						this.performance.measurements[index].push({ start: performance.now(), end: 0 });
+					}
 					const runResult = this.candidate.apply(this.candidateContext, argumentGroup);
+					if (this.performance.enabled) {
+						this.performance.measurements[index][this.currentRun].end = performance.now();
+					}
 					const condition = this.conditions[index];
 					this.passing.push(typeof condition === 'function' ? condition(runResult) : runResult === condition);
 				} catch (error) {
