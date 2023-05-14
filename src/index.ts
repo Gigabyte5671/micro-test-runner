@@ -4,6 +4,8 @@ export enum FailureLogSeverity {
 	ERROR
 }
 
+type PerformanceLogFormat = 'average' | 'table';
+
 class MicroTestRunner <Async extends 'sync' | 'async'> {
 	private candidate: Function;
 	private log = {
@@ -19,6 +21,7 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	private currentRun = 0;
 	private performance = {
 		enabled: false,
+		logFormat: 'average' as PerformanceLogFormat,
 		measurements: [] as { start: number, end: number }[][]
 	};
 	private passing = [] as boolean[];
@@ -30,22 +33,36 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 
 	private get logMessage (): string {
 		let performanceMessage = '';
+		let performanceTable = '';
 		if (this.result && this.performance.enabled && this.performance.measurements.length > 0) {
+			if (this.performance.logFormat === 'table') {
+				performanceTable = '\n  ╭──────┬───────┬───────────────╮\n  │ Test │  Run  │ Duration (ms) │';
+			}
 			const startTimestamp = this.performance.measurements[0][0].start;
 			const endTimestamp = this.performance.measurements[this.performance.measurements.length - 1][this.performance.measurements[this.performance.measurements.length - 1].length - 1].end;
 			const testDuration = Number(endTimestamp - startTimestamp);
 			let averageRunDuration = 0;
 			let totalRuns = 0;
-			for (const test of this.performance.measurements) {
-				for (const run of test) {
-					averageRunDuration += run.end - run.start;
-					totalRuns++;
+			this.performance.measurements.forEach((test, testIndex) => {
+				if (this.performance.logFormat === 'table') {
+					performanceTable += '\n  ├──────┼───────┼───────────────┤';
 				}
+				test.forEach((run, runIndex) => {
+					const runDuration = run.end - run.start;
+					averageRunDuration += runDuration;
+					if (this.performance.logFormat === 'table') {
+						performanceTable += `\n  │ ${runIndex === 0 ? (testIndex + 1).toString().padEnd(4, ' ') : '    '} │ ${(runIndex + 1).toString().padEnd(5, ' ')} │ ${runDuration.toFixed(3).padStart(13, ' ')} │`;
+					}
+					totalRuns++;
+				});
+			});
+			if (this.performance.logFormat === 'table') {
+				performanceTable += '\n  ╰──────┴───────┴───────────────╯';
 			}
 			averageRunDuration = Number(averageRunDuration / totalRuns);
 			performanceMessage = ` in ${testDuration.toFixed(3)}ms${ totalRuns > 1 ? ` (x̄ ${averageRunDuration.toFixed(3)}ms per run, over ${totalRuns} runs)` : ''}`;
 		}
-		return `${this.result ? this.log.icons[0] : this.log.icons[1]} ${this.log.name} test ${this.result ? 'passed' : 'failed'}${performanceMessage}.`;
+		return `${this.result ? this.log.icons[0] : this.log.icons[1]} ${this.log.name} test ${this.result ? 'passed' : 'failed'}${performanceMessage}${this.performance.logFormat === 'table' ? ':' : '.'}${performanceTable}`;
 	}
 
 	private logResult (): void {
@@ -81,16 +98,25 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	 * • `2 - throw`
 	 * @param icons `(Optional)` Icons to use to indicate the outcome of the test.
 	 * Default: `['✓', '✕']`.
-	 * @param performance `(Optional)` Log the performance of each test run.
+	 * @param performance `(Optional)` Log the performance of each test run in the desired format:
+	 * 
+	 * • `true` - Average of all runs.
+	 * 
+	 * • `'average'` - Average of all runs.
+	 * 
+	 * • `'table'` - A table showing the performance of each run.
 	 * @returns 
 	 */
-	logging (name: string, severity = FailureLogSeverity.LOG, icons?: [string, string], performance = false): MicroTestRunner<Async> {
+	logging (name: string, severity = FailureLogSeverity.LOG, icons?: [string, string], performance: boolean | PerformanceLogFormat = false): MicroTestRunner<Async> {
 		this.log.name = name;
 		this.log.severity = severity;
 		if (Array.isArray(icons) && icons.length === 2) {
 			this.log.icons = icons;
 		}
-		this.performance.enabled = performance && Boolean(globalThis.performance);
+		this.performance.enabled = Boolean(performance) && Boolean(globalThis.performance);
+		if (typeof performance === 'string') {
+			this.performance.logFormat = performance;
+		}
 		return this;
 	}
 
