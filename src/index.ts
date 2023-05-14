@@ -185,8 +185,8 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 							if (this.performance.enabled) {
 								this.performance.measurements[index][this.currentRun].end = performance.now();
 							}
-							const condition = this.conditions[index];
 							this.passing.push(typeof condition === 'function' ? condition(runResult) : runResult === condition);
+							const condition = this.conditions[Math.min(index, this.conditions.length - 1)];
 						} catch (error) {
 							console.warn('MicroTestRunner: Run failed.', error);
 						}
@@ -220,8 +220,8 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 					if (this.performance.enabled) {
 						this.performance.measurements[index][this.currentRun].end = performance.now();
 					}
-					const condition = this.conditions[index];
 					this.passing.push(typeof condition === 'function' ? condition(runResult) : runResult === condition);
+					const condition = this.conditions[Math.min(index, this.conditions.length - 1)];
 				} catch (error) {
 					console.warn('MicroTestRunner: Run failed.', error);
 				}
