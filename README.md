@@ -4,6 +4,8 @@
 
 A minimal JavaScript test runner.
 
+[Package](https://www.npmjs.com/package/micro-test-runner) • [Demo](https://micro-test-runner.zakweb.dev/)
+
 ## Installation
 
 ```bash
