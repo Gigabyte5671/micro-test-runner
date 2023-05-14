@@ -62,7 +62,7 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 			averageRunDuration = Number(averageRunDuration / totalRuns);
 			performanceMessage = ` in ${testDuration.toFixed(3)}ms${ totalRuns > 1 ? ` (x̄ ${averageRunDuration.toFixed(3)}ms per run, over ${totalRuns} runs)` : ''}`;
 		}
-		return `${this.result ? this.log.icons[0] : this.log.icons[1]} ${this.log.name} test ${this.result ? 'passed' : 'failed'}${performanceMessage}${this.performance.logFormat === 'table' ? ':' : '.'}${performanceTable}`;
+		return `${this.result ? this.log.icons[0] : this.log.icons[1]} ${this.log.name} test ${this.result ? 'passed' : 'failed'}${performanceMessage}${this.result && this.performance.logFormat === 'table' ? ':' : '.'}${performanceTable}`;
 	}
 
 	private logResult (): void {
