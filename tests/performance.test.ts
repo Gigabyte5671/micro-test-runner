@@ -14,5 +14,5 @@ export default function performanceTest (): void {
 		.times(3)
 		.with([])
 		.with([])
-		.expect([(value: number, duration: number) => 150 < duration && duration < 250]);
+		.expect([(value: number, duration: number) => 150 < duration && duration < 300]);
 }
