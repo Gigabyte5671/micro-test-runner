@@ -178,15 +178,17 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 					this.performance.measurements.push([]);
 					while (this.currentRun < this.runs) {
 						try {
+							let runDuration = undefined as number | undefined;
 							if (this.performance.enabled) {
 								this.performance.measurements[index].push({ start: performance.now(), end: 0 });
 							}
 							const runResult = await Promise.resolve(this.candidate.apply(this.candidateContext, argumentGroup));
 							if (this.performance.enabled) {
 								this.performance.measurements[index][this.currentRun].end = performance.now();
+								runDuration = this.performance.measurements[index][this.currentRun].end - this.performance.measurements[index][this.currentRun].start;
 							}
-							this.passing.push(typeof condition === 'function' ? condition(runResult) : runResult === condition);
 							const condition = this.conditions[Math.min(index, this.conditions.length - 1)];
+							this.passing.push(typeof condition === 'function' ? condition(runResult, runDuration) : runResult === condition);
 						} catch (error) {
 							console.warn('MicroTestRunner: Run failed.', error);
 						}
@@ -213,15 +215,17 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 			this.performance.measurements.push([]);
 			while (this.currentRun < this.runs) {
 				try {
+					let runDuration = undefined as number | undefined;
 					if (this.performance.enabled) {
 						this.performance.measurements[index].push({ start: performance.now(), end: 0 });
 					}
 					const runResult = this.candidate.apply(this.candidateContext, argumentGroup);
 					if (this.performance.enabled) {
 						this.performance.measurements[index][this.currentRun].end = performance.now();
+						runDuration = this.performance.measurements[index][this.currentRun].end - this.performance.measurements[index][this.currentRun].start;
 					}
-					this.passing.push(typeof condition === 'function' ? condition(runResult) : runResult === condition);
 					const condition = this.conditions[Math.min(index, this.conditions.length - 1)];
+					this.passing.push(typeof condition === 'function' ? condition(runResult, runDuration) : runResult === condition);
 				} catch (error) {
 					console.warn('MicroTestRunner: Run failed.', error);
 				}
