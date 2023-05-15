@@ -65,6 +65,9 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 		return `${this.result ? this.log.icons[0] : this.log.icons[1]} ${this.log.name} test ${this.result ? 'passed' : 'failed'}${performanceMessage}${this.result && this.performance.logFormat === 'table' ? ':' : '.'}${performanceTable}`;
 	}
 
+	/**
+	 * Log the test result with the appropriate severity.
+	 */
 	private logResult (): void {
 		if (!this.result) {
 			if (this.log.severity === FailureLogSeverity.ERROR) {
