@@ -86,7 +86,7 @@ import test, { FailureLogSeverity } from 'micro-test-runner';
 
 test(yourFunction)							  // Test `yourFunction`...
 	.times(3)							  // 3 times...
-	.logging('Function Name', FailureLogSeverity.WARN, ['✅', '❌']) // Logging the result...
+	.logging('Function Name', FailureLogSeverity.WARN, ['✅', '❌']) // Logging the outcome...
 	.with(['Hello', 'world!'])					  // With these arguments...
 	.expect(['Hello world!']);					  // And expect these results.
 ```
@@ -135,7 +135,7 @@ Promise:
 import test from 'micro-test-runner';
 import { apiCall } from './yourProject';
 
-const result = test(apiCall)				// Test your `apiCall` function...
+test(apiCall)					// Test your `apiCall` function...
 	.async()					// Asynchronously...
 	.times(3)					// 3 times...
 	.with(['https://example.com/api', '/endpoint'])	// With these arguments...
@@ -147,4 +147,39 @@ const result = test(apiCall)				// Test your `apiCall` function...
 			// Your test failed.
 		}
 	});
+```
+
+Performance Logging:
+
+```javascript
+import test, { FailureLogSeverity } from 'micro-test-runner';
+import { slowFunction } from './yourProject';
+
+test(slowFunction)					// Test `slowFunction`...
+	.times(3)							// 3 times...
+	.logging('Slow', FailureLogSeverity.WARN, undefined, 'table') // Logging the outcome and performance to a table...
+	.with([2, 3])					// With these arguments...
+	.with([4, 1])					// And these arguments...
+	.expect([(value, runIndex, duration) => { 	// And expect these results (verifying them with a function).
+		return
+			value === 5			// Check the value returned by `slowFunction`.
+			&& duration < 200;		// Check that `slowFunction` took less than 200ms.
+	}]);
+
+/* Console output...
+
+✓ Slow test passed in 1004.742ms (x̄ 160.779ms per run, over 6 runs):
+  ╭──────┬───────┬───────────────╮
+  │ Test │  Run  │ Duration (ms) │
+  ├──────┼───────┼───────────────┤
+  │ 1    │ 1     │       150.812 │
+  │      │ 2     │       184.766 │
+  │      │ 3     │       161.057 │
+  ├──────┼───────┼───────────────┤
+  │ 2    │ 1     │       162.936 │
+  │      │ 2     │       159.213 │
+  │      │ 3     │       145.887 │
+  ╰──────┴───────┴───────────────╯
+
+*/
 ```
