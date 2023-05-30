@@ -99,7 +99,7 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	 * • `1 - console.warn`
 	 * 
 	 * • `2 - throw`
-	 * @param icons `(Optional)` Icons to use to indicate the outcome of the test.
+	 * @param icons `(Optional)` Icons used to visually indicate the outcome of the test.
 	 * Default: `['✓', '✕']`.
 	 * @param performance `(Optional)` Log the performance of each test run in the desired format:
 	 * 
