@@ -2,12 +2,12 @@
   "name": "micro-test-runner",
   "version": "1.5.0",
   "description": "A minimal JavaScript test runner.",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.min.js",
+  "types": "./dist/index.min.d.ts",
   "type": "module",
   "scripts": {
     "test": "tsc --build tsconfig.test.json && node test_build/tests/index.js",
-    "build": "tsc --build tsconfig.json"
+    "build": "tsc --build tsconfig.json && node minify.js"
   },
   "repository": {
     "type": "git",

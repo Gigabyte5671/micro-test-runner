@@ -6,4 +6,5 @@
 /tests
 logo.ai
 logo.svg
+minify.js
 tsconfig.test.json
