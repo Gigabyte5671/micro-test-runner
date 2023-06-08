@@ -29,6 +29,7 @@
     "url": "https://github.com/Gigabyte5671/micro-test-runner/issues"
   },
   "homepage": "https://github.com/Gigabyte5671/micro-test-runner#readme",
+  "funding": "https://github.com/sponsors/Gigabyte5671",
   "devDependencies": {
     "typescript": "^4.9.5"
   }
