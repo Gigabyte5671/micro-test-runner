@@ -15,9 +15,12 @@
   },
   "keywords": [
     "JavaScript",
+    "TypeScript",
     "unit",
     "test",
-    "test-runner"
+    "test-runner",
+    "performance",
+    "minimal"
   ],
   "author": {
     "name": "Giga",
