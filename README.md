@@ -76,9 +76,7 @@ testRunner.expect([result1, result2, (value) => (/[0-9]+/u).test(value)]);
 
 ## Results
 
-Calling `.expect` will also run the test, returning `true` if your function passes, `false` if not.
-
-If your function is asynchronous, you will need to `await` this value or use `.then()`.
+Calling `.expect` will run the test, returning `true` if your function passes, `false` if not. If your function is asynchronous, you will need to `await` this value or use `.then()`.
 
 Alternately, if you'd like Micro Test-Runner to log the results for you, you can chain the `.logging()` method.
 ```javascript
@@ -90,10 +88,23 @@ test(yourFunction)							  // Test `yourFunction`...
 	.with(['Hello', 'world!'])					  // With these arguments...
 	.expect(['Hello world!']);					  // And expect these results.
 ```
-This can remove the need to handle the value returned from `.expect()`.
+This method takes 4 arguments:
+- The name of the test.
+- `(Optional)` The severity used to log the test's failure. There are 3 options for this argument:
+  - `LOG` - Logs test results to the console.
+  - `WARN` - Same as `LOG`, but failures will appear as warnings.
+  - `ERROR` - Same as `LOG`, but failures will throw an error.
+- `(Optional)` Icons used to visually indicate the outcome of the test.
+- `(Optional)` Log the performance of each test run in the desired format:
+  - `true` - Average of all runs.
+  - `'average'` - Average of all runs.
+  - `'table'` - A table showing the performance of each run.
+
+The `logging()` methods removes the need to handle the value returned from `.expect()`.
 
 ## Examples
 
+Basic:
 ```javascript
 import test from 'micro-test-runner';
 import { yourFunction } from './yourProject';
@@ -108,6 +119,18 @@ if (result) {
 } else {
 	// Your test failed.
 }
+```
+
+Logging:
+```javascript
+import test from 'micro-test-runner';
+import { yourFunction } from './yourProject';
+
+test(yourFunction)	// Test `yourFunction`...
+	.times(3)			// 3 times...
+	.logging('Function Name') // Logging the outcome...
+	.with(['Hello', 'world!'])	// With these arguments...
+	.expect(['Hello world!']);	// And expect these results.
 ```
 
 Async:
