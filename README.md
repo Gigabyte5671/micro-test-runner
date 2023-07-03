@@ -38,10 +38,14 @@ Create a new test-runner with:
 const testRunner = test(yourFunction);
 ```
 
+<br>
+
 If your function is asynchronous, chain the `.async` method:
 ```javascript
 testRunner.async();
 ```
+
+<br>
 
 If your function requires a specific context (`this`), chain the `.context` method:
 ```javascript
@@ -49,7 +53,7 @@ class YourClass {
 	public static c = 17;
 	
 	public static yourFunction (a, b) {
-		return a + b + this.c;
+		return a + b + this.c;		// `this` is used by yourFunction.
 	}
 }
 
@@ -60,10 +64,13 @@ testRunner.context(YourClass);
 
 <br>
 
-Specify the arguents to pass into your function:
+Specify the arguments to pass into your function:
 ```javascript
 testRunner.with([arg1, arg2, arg3, etc...]);
 ```
+
+<details>
+	<summary>Advanced</summary>
 
 You can chain `.with` methods to run your function multiple times with different arguments:
 ```javascript
@@ -71,6 +78,7 @@ testRunner.with([arg1, arg2])	// Test 1.
           .with([argA, argB])	// Test 2.
           .with([argX, argY])	// Test 3.
 ```
+</details>
 
 <br>
 
@@ -81,14 +89,19 @@ testRunner.times(5);	// Will run each of the sequential tests 5 times.
 
 <br>
 
-Specify the results you expect your function to return from each test:
+Finally, specify the results you expect your function to return from each test:
 ```javascript
 testRunner.expect([result1, result2, result3, etc...]);
 ```
+
+<details>
+	<summary>Advanced</summary>
+
 If a function is passed as an expected result, it will be evaluated on the value that the candidate returned for that particular test. This function should then return a boolean indicating whether the value was correct or not. For example:
 ```javascript
-testRunner.expect([result1, result2, (value) => value typeof 'string']);
+testRunner.expect([result1, result2, (value) => value typeof 'number']);
 ```
+</details>
 
 <br>
 
@@ -119,15 +132,16 @@ This method takes 4 arguments:
 - `(Optional)` Log the performance of each test run in the desired format:
   - `true` - Average of all runs.
   - `'average'` - Average of all runs.
-  - `'table'` - A table showing the performance of each run.
+  - `'table'` - A table showing the performance of each individual run.
 
-The `logging()` methods removes the need to handle the value returned from `.expect()`.
+The `logging()` method removes the need to handle the value returned from `.expect()`.
 
 <br>
 
 ## Examples
 
 Basic:
+
 ```javascript
 import test from 'micro-test-runner';
 import { yourFunction } from './yourProject';
@@ -145,6 +159,7 @@ if (result) {
 ```
 
 Logging:
+
 ```javascript
 import test from 'micro-test-runner';
 import { yourFunction } from './yourProject';
@@ -203,10 +218,10 @@ import { slowFunction } from './yourProject';
 
 test(slowFunction)							// Test `slowFunction`...
 	.times(3)							// 3 times...
-	.logging('Slow', FailureLogSeverity.LOG, undefined, 'table') 	// Logging the outcome and performance to a table in the console...
 	.with([2, 3])							// With these arguments...
 	.with([4, 1])							// And these arguments...
-	.expect([(value, runIndex, duration) => { 			// And expect these results (verifying them with a function).
+	.logging('Slow', FailureLogSeverity.LOG, undefined, 'table') 	// Logging the outcome and performance to a table in the console...
+	.expect([(value, runIndex, duration) => { 			// And expect these results (verified with a function).
 		return
 			value === 5					// Check the value returned by `slowFunction`.
 			&& duration < 200;				// Check that `slowFunction` took less than 200ms.
