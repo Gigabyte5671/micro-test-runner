@@ -25,6 +25,12 @@ const test = require('micro-test-runner');
 
 <br>
 
+## Overview
+
+![overview flow diagram](https://micro-test-runner.zakweb.dev/flow-diagram.svg)
+
+<br>
+
 ## Usage
 
 Create a new test-runner with:
