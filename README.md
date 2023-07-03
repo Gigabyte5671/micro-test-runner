@@ -6,6 +6,8 @@ A minimal JavaScript test runner.
 
 [Package](https://www.npmjs.com/package/micro-test-runner) • [Demo](https://micro-test-runner.zakweb.dev/)
 
+<br>
+
 ## Installation
 
 ```bash
@@ -20,6 +22,8 @@ import test from 'micro-test-runner';
 
 const test = require('micro-test-runner');
 ```
+
+<br>
 
 ## Usage
 
@@ -48,22 +52,28 @@ class YourClass {
 testRunner.context(YourClass);
 ```
 
+<br>
+
 Specify the arguents to pass into your function:
 ```javascript
 testRunner.with([arg1, arg2, arg3, etc...]);
 ```
 
-You can chain `.with` methods to run multiple sequential tests with different arguments:
+You can chain `.with` methods to run your function multiple times with different arguments:
 ```javascript
 testRunner.with([arg1, arg2])	// Test 1.
           .with([argA, argB])	// Test 2.
           .with([argX, argY])	// Test 3.
 ```
 
+<br>
+
 Optionally, specify the number of times to run each test:
 ```javascript
 testRunner.times(5);	// Will run each of the sequential tests 5 times.
 ```
+
+<br>
 
 Specify the results you expect your function to return from each test:
 ```javascript
@@ -71,12 +81,17 @@ testRunner.expect([result1, result2, result3, etc...]);
 ```
 If a function is passed as an expected result, it will be evaluated on the value that the candidate returned for that particular test. This function should then return a boolean indicating whether the value was correct or not. For example:
 ```javascript
-testRunner.expect([result1, result2, (value) => (/[0-9]+/u).test(value)]);
+testRunner.expect([result1, result2, (value) => value typeof 'string']);
 ```
+
+<br>
 
 ## Results
 
-Calling `.expect` will run the test, returning `true` if your function passes, `false` if not. If your function is asynchronous, you will need to `await` this value or use `.then()`.
+Calling `.expect` will run the test(s), returning `true` if your function passes, `false` if not. If your function is asynchronous, you will need to `await` this value or use `.then()`.
+```javascript
+const outcome = testRunner.expect([result1, result2]);
+```
 
 Alternately, if you'd like Micro Test-Runner to log the results for you, you can chain the `.logging()` method.
 ```javascript
@@ -102,6 +117,8 @@ This method takes 4 arguments:
 
 The `logging()` methods removes the need to handle the value returned from `.expect()`.
 
+<br>
+
 ## Examples
 
 Basic:
@@ -126,9 +143,9 @@ Logging:
 import test from 'micro-test-runner';
 import { yourFunction } from './yourProject';
 
-test(yourFunction)	// Test `yourFunction`...
+test(yourFunction)			// Test `yourFunction`...
 	.times(3)			// 3 times...
-	.logging('Function Name') // Logging the outcome...
+	.logging('Function Name')	// Logging the outcome...
 	.with(['Hello', 'world!'])	// With these arguments...
 	.expect(['Hello world!']);	// And expect these results.
 ```
