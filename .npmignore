@@ -7,4 +7,5 @@
 logo.ai
 logo.svg
 minify.js
+tsconfig.json
 tsconfig.test.json
