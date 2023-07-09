@@ -107,9 +107,14 @@ testRunner.expect([result1, result2, (value) => value typeof 'number']);
 
 ## Results
 
-Calling `.expect` will run the test(s), returning `true` if your function passes, `false` if not. If your function is asynchronous, you will need to `await` this value or use `.then()`.
+Calling `.expect` will run the test(s), returning `true` if your function passes, `false` if not.
 ```javascript
 const outcome = testRunner.expect([result1, result2]);
+```
+
+If your function is asynchronous, you will need to `await` this value or use `.then()`.
+```javascript
+const outcome = await testRunner.async().expect([result1, result2]);
 ```
 
 Alternately, if you'd like Micro Test-Runner to log the results for you, you can chain the `.logging()` method.
@@ -123,16 +128,16 @@ test(yourFunction)							  // Test `yourFunction`...
 	.expect(['Hello world!']);					  // And expect these results.
 ```
 This method takes 4 arguments:
-- The name of the test.
-- `(Optional)` The severity used to log the test's failure. There are 3 options for this argument:
-  - `LOG` - Logs test results to the console.
-  - `WARN` - Same as `LOG`, but failures will appear as warnings.
-  - `ERROR` - Same as `LOG`, but failures will throw an error.
-- `(Optional)` Icons used to visually indicate the outcome of the test.
-- `(Optional)` Log the performance of each test run in the desired format:
-  - `true` - Average of all runs.
-  - `'average'` - Average of all runs.
-  - `'table'` - A table showing the performance of each individual run.
+1. The name of the test.
+2. `(Optional)` The severity used to log the test's failure. There are 3 options for this argument:
+   - `LOG` - Logs test results to the console.
+   - `WARN` - Same as `LOG`, but failures will appear as warnings.
+   - `ERROR` - Same as `LOG`, but failures will throw an error.
+3. `(Optional)` Icons used to visually indicate the outcome of the test.
+4. `(Optional)` Log the performance of each test run in the desired format:
+   - `true` - Average of all runs.
+   - `'average'` - Average of all runs.
+   - `'table'` - A table showing the performance of each individual run.
 
 The `logging()` method removes the need to handle the value returned from `.expect()`.
 
