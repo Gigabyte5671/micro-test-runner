@@ -1,4 +1,7 @@
-export enum FailureLogSeverity {
+/**
+ * The severity with which to log test failures.
+ */
+export enum Severity {
 	LOG,
 	WARN,
 	ERROR
@@ -11,7 +14,7 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	private log = {
 		name: undefined as string | undefined,
 		icons: ['✓', '✕'],
-		severity: FailureLogSeverity.LOG
+		severity: Severity.LOG
 	};
 	private asynchronous = 'sync' as Async;
 	private candidateContext: any;
@@ -70,9 +73,9 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	 */
 	private logResult (): void {
 		if (!this.result) {
-			if (this.log.severity === FailureLogSeverity.ERROR) {
+			if (this.log.severity === Severity.ERROR) {
 				throw new Error(this.logMessage);
-			} else if (this.log.severity === FailureLogSeverity.WARN) {
+			} else if (this.log.severity === Severity.WARN) {
 				console.warn(this.logMessage);
 				return;
 			}
@@ -110,7 +113,7 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	 * • `'table'` - A table showing the performance of each run.
 	 * @returns 
 	 */
-	logging (name: string, severity = FailureLogSeverity.LOG, icons?: [string, string], performance: boolean | PerformanceLogFormat = false): MicroTestRunner<Async> {
+	logging (name: string, severity = Severity.LOG, icons?: [string, string], performance: boolean | PerformanceLogFormat = false): MicroTestRunner<Async> {
 		this.log.name = name;
 		this.log.severity = severity;
 		if (Array.isArray(icons) && icons.length === 2) {
