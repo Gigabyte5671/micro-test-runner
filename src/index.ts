@@ -179,7 +179,8 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 
 		// Asynchronous:
 		if (this.asynchronous === 'async') {
-			const promise = new Promise<boolean>( async (resolve) => {
+			const promise = new Promise<boolean>(async (resolve) => {
+				let halt = false;
 				for (const [index, argumentGroup] of this.args.entries()) {
 					this.currentRun = 0;
 					this.performance.measurements.push([]);
@@ -195,12 +196,18 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 								runDuration = this.performance.measurements[index][this.currentRun].end - this.performance.measurements[index][this.currentRun].start;
 							}
 							const condition = this.conditions[Math.min(index, this.conditions.length - 1)];
-							this.passing.push(typeof condition === 'function' ? condition(runResult, this.currentRun, runDuration) : runResult === condition);
+							const pass = typeof condition === 'function' ? condition(runResult, this.currentRun, runDuration) : runResult === condition;
+							this.passing.push(pass);
+							if (!pass) {
+								halt = true;
+							}
 						} catch (error) {
 							console.warn('MicroTestRunner: Run failed.', error);
 						}
 						this.currentRun++;
+						if (halt) break;
 					}
+					if (halt) break;
 				}
 
 				// Return false if any one of the tests failed.
@@ -217,6 +224,7 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 		}
 
 		// Synchronous:
+		let halt = false;
 		for (const [index, argumentGroup] of this.args.entries()) {
 			this.currentRun = 0;
 			this.performance.measurements.push([]);
@@ -232,12 +240,18 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 						runDuration = this.performance.measurements[index][this.currentRun].end - this.performance.measurements[index][this.currentRun].start;
 					}
 					const condition = this.conditions[Math.min(index, this.conditions.length - 1)];
-					this.passing.push(typeof condition === 'function' ? condition(runResult, this.currentRun, runDuration) : runResult === condition);
+					const pass = typeof condition === 'function' ? condition(runResult, this.currentRun, runDuration) : runResult === condition;
+					this.passing.push(pass);
+					if (!pass) {
+						halt = true;
+					}
 				} catch (error) {
 					console.warn('MicroTestRunner: Run failed.', error);
 				}
 				this.currentRun++;
+				if (halt) break;
 			}
+			if (halt) break;
 		}
 
 		// Return false if any one of the tests failed.
