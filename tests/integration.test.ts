@@ -9,7 +9,7 @@ export default function integrationTest (): void {
 	test(candidate)
 		.logging('Integration', FailureLogSeverity.ERROR, undefined, true)
 		.times(3)
-		.with([24, 48])
-		.with([162, 5])
-		.expect([72, (value: number) => (/[0-9]+/u).test(value.toString())]);
+		.with(24, 48)
+		.with(162, 5)
+		.expect(72, (value: number) => (/[0-9]+/u).test(value.toString()));
 }

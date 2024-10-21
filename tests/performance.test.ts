@@ -12,7 +12,7 @@ export default function performanceTest (): void {
 		.logging('Performance', FailureLogSeverity.WARN, undefined, 'table')
 		.async()
 		.times(3)
-		.with([])
-		.with([])
-		.expect([(value: number, run: number, duration: number) => 150 < duration && duration < 300]);
+		.with()
+		.with()
+		.expect((value: number, run: number, duration: number) => 150 < duration && duration < 300);
 }

@@ -12,9 +12,9 @@ export default function asyncTest (): void {
 		.logging('Async Logging', 2, undefined, true)
 		.async()
 		.times(6)
-		.with([24, 48])
-		.with([162, 5])
-		.expect([72, (value: number) => (/[0-9]+/u).test(value.toString())])
+		.with(24, 48)
+		.with(162, 5)
+		.expect(72, (value: number) => (/[0-9]+/u).test(value.toString()))
 		.then(result => {
 			if (!result) {
 				throw new Error('✕ Async test failed.');

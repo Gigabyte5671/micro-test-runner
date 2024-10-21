@@ -125,7 +125,6 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	 * • `'average'` - Average of all runs.
 	 * 
 	 * • `'table'` - A table showing the performance of each run.
-	 * @returns 
 	 */
 	logging (name: string, severity = Severity.LOG, icons?: [string, string], performance: boolean | PerformanceLogFormat = false): MicroTestRunner<Async> {
 		this.log.name = name;
@@ -168,25 +167,22 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 
 	/**
 	 * Provide arguments to the candidate.
-	 * @param args 
+	 * @param args The arguments.
 	 */
-	with (args: Array<unknown>): MicroTestRunner<Async> {
+	with (...args: Array<unknown>): MicroTestRunner<Async> {
 		this.args.push(args);
 		return this;
 	}
 
 	/**
 	 * The results to expect from each test.
-	 * @param conditions An array of expected results.
+	 * @param conditions The expected results.
 	 * @returns `true` if all test runs passed, `false` if any run failed.
 	 */
-	expect (conditions: Array<unknown>): Async extends 'async' ? Promise<boolean> : boolean {
-		if (Array.isArray(conditions)) {
-			this.conditions = conditions;
-		} else {
-			this.conditions.push(conditions);
-		}
-		if (this.args.length <= 0) {
+	expect (...conditions: Array<unknown>): Async extends 'async' ? Promise<boolean> : boolean {
+		this.conditions = conditions;
+
+		if (!this.args.length) {
 			this.args.push([]);
 		}
 

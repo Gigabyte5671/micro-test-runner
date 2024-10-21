@@ -66,7 +66,7 @@ testRunner.context(YourClass);
 
 Specify the arguments to pass into your function:
 ```javascript
-testRunner.with([arg1, arg2, arg3, etc...]);
+testRunner.with(arg1, arg2, arg3, etc...);
 ```
 
 <details>
@@ -74,9 +74,9 @@ testRunner.with([arg1, arg2, arg3, etc...]);
 
 You can chain `.with` methods to run your function multiple times with different arguments:
 ```javascript
-testRunner.with([arg1, arg2])    // Test 1.
-          .with([argA, argB])    // Test 2.
-          .with([argX, argY])    // Test 3.
+testRunner.with(arg1, arg2)    // Test 1.
+          .with(argA, argB)    // Test 2.
+          .with(argX, argY)    // Test 3.
 ```
 </details>
 
@@ -91,7 +91,7 @@ testRunner.times(5);    // Will run each of the sequential tests 5 times.
 
 Finally, specify the results you expect your function to return from each test:
 ```javascript
-testRunner.expect([result1, result2, result3, etc...]);
+testRunner.expect(result1, result2, result3, etc...);
 ```
 
 <details>
@@ -99,7 +99,7 @@ testRunner.expect([result1, result2, result3, etc...]);
 
 If a function is passed as an expected result, it will be evaluated on the value that the candidate returned for that particular test. This function should then return a boolean indicating whether the value was correct or not. For example:
 ```javascript
-testRunner.expect([result1, result2, (value) => value typeof 'number']);
+testRunner.expect(result1, result2, (value) => value typeof 'number');
 ```
 </details>
 
@@ -109,12 +109,12 @@ testRunner.expect([result1, result2, (value) => value typeof 'number']);
 
 Calling `.expect` will run the test(s), returning `true` if your function passes, `false` if not.
 ```javascript
-const outcome = testRunner.expect([result1, result2]);
+const outcome = testRunner.expect(result1, result2);
 ```
 
 If your function is asynchronous, you will need to `await` this value or use `.then()`.
 ```javascript
-const outcome = await testRunner.async().expect([result1, result2]);
+const outcome = await testRunner.async().expect(result1, result2);
 ```
 
 Alternately, if you'd like Micro Test-Runner to log the results for you, you can chain the `.logging()` method.
@@ -124,8 +124,8 @@ import test, { Severity } from 'micro-test-runner';
 test(yourFunction)                                          // Test `yourFunction`...
     .times(3)                                               // 3 times...
     .logging('Function Name', Severity.WARN, ['✅', '❌'])  // Logging the outcome...
-    .with(['Hello', 'world!'])                              // With these arguments...
-    .expect(['Hello world!']);                              // And expect these results.
+    .with('Hello', 'world!')                                // With these arguments...
+    .expect('Hello world!');                                // And expect these results.
 ```
 This method takes 4 arguments:
 1. The name of the test.
@@ -153,8 +153,8 @@ import { yourFunction } from './yourProject';
 
 const result = test(yourFunction)  // Test `yourFunction`...
     .times(3)                      // 3 times...
-    .with(['Hello', 'world!'])     // With these arguments...
-    .expect(['Hello world!']);     // And expect these results.
+    .with('Hello', 'world!')       // With these arguments...
+    .expect('Hello world!');       // And expect these results.
 
 if (result) {
     // Your test passed.
@@ -172,8 +172,8 @@ import { yourFunction } from './yourProject';
 test(yourFunction)              // Test `yourFunction`...
     .times(3)                   // 3 times...
     .logging('Function Name')   // Logging the outcome...
-    .with(['Hello', 'world!'])  // With these arguments...
-    .expect(['Hello world!']);  // And expect these results.
+    .with('Hello', 'world!')    // With these arguments...
+    .expect('Hello world!');    // And expect these results.
 ```
 
 Async:
@@ -185,8 +185,8 @@ import { apiCall } from './yourProject';
 const result = await test(apiCall)                   // Test your `apiCall` function...
     .async()                                         // Asynchronously...
     .times(3)                                        // 3 times...
-    .with(['https://example.com/api', '/endpoint'])  // With these arguments...
-    .expect([{ data: 'Hello world!' }]);             // And expect these results.
+    .with('https://example.com/api', '/endpoint')    // With these arguments...
+    .expect({ data: 'Hello world!' });               // And expect these results.
 
 if (result) {
     // Your test passed.
@@ -204,8 +204,8 @@ import { apiCall } from './yourProject';
 test(apiCall)                                        // Test your `apiCall` function...
     .async()                                         // Asynchronously...
     .times(3)                                        // 3 times...
-    .with(['https://example.com/api', '/endpoint'])  // With these arguments...
-    .expect([{ data: 'Hello world!' }])              // And expect these results.
+    .with('https://example.com/api', '/endpoint')    // With these arguments...
+    .expect({ data: 'Hello world!' })                // And expect these results.
     .then(result => {
         if (result) {
             // Your test passed.
@@ -223,14 +223,14 @@ import { slowFunction } from './yourProject';
 
 test(slowFunction)                                      // Test `slowFunction`...
     .times(3)                                           // 3 times...
-    .with([2, 3])                                       // With these arguments...
-    .with([4, 1])                                       // And these arguments...
+    .with(2, 3)                                         // With these arguments...
+    .with(4, 1)                                         // And these arguments...
     .logging('Slow', Severity.LOG, undefined, 'table')  // Logging the outcome and performance to a table in the console...
-    .expect([(value, runIndex, duration) => {           // And expect these results (verified with a function).
+    .expect((value, runIndex, duration) => {            // And expect these results (verified with a function).
         return
             value === 5                                 // Check the value returned by `slowFunction`.
             && duration < 200;                          // Check that `slowFunction` took less than 200ms.
-    }]);
+    });
 
 
 /* Console output...
