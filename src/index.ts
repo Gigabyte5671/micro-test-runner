@@ -10,6 +10,12 @@ export enum Severity {
 type PerformanceLogFormat = 'average' | 'table';
 type PerformanceMeasurement = { start: number, end: number };
 
+interface TestResult {
+	passed: boolean;
+	expected?: unknown;
+	received?: unknown;
+};
+
 class MicroTestRunner <Async extends 'sync' | 'async'> {
 	private candidate: Function;
 	private log = {
@@ -29,7 +35,9 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 		measurements: <PerformanceMeasurement[][]> []
 	};
 	private passing: boolean[] = [];
-	private result = false;
+	private result: TestResult = {
+		passed: false
+	};
 
 	constructor (candidate: Function) {
 		this.candidate = candidate;
@@ -38,9 +46,9 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 	private get logMessage (): string {
 		let performanceMessage = '';
 		let performanceTable = '';
-		if (this.result && this.performance.enabled && this.performance.measurements.length > 0) {
+		if (this.result.passed && this.performance.enabled && this.performance.measurements.length > 0) {
 			if (this.performance.logFormat === 'table') {
-				performanceTable = '\n  ╭──────┬───────┬───────────────╮\n  │ Test │  Run  │ Duration (ms) │';
+				performanceTable = '\n  ╭───────┬───────┬───────────────╮\n  │ Test  │ Run   │ Duration (ms) │';
 			}
 			const startTimestamp = this.performance.measurements[0][0].start;
 			const endTimestamp = this.performance.measurements[this.performance.measurements.length - 1][this.performance.measurements[this.performance.measurements.length - 1].length - 1].end;
@@ -49,31 +57,36 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 			let totalRuns = 0;
 			this.performance.measurements.forEach((test, testIndex) => {
 				if (this.performance.logFormat === 'table') {
-					performanceTable += '\n  ├──────┼───────┼───────────────┤';
+					performanceTable += '\n  ├───────┼───────┼───────────────┤';
 				}
 				test.forEach((run, runIndex) => {
 					const runDuration = run.end - run.start;
 					averageRunDuration += runDuration;
 					if (this.performance.logFormat === 'table') {
-						performanceTable += `\n  │ ${runIndex === 0 ? (testIndex + 1).toString().padEnd(4, ' ') : '    '} │ ${(runIndex + 1).toString().padEnd(5, ' ')} │ ${runDuration.toFixed(3).padStart(13, ' ')} │`;
+						performanceTable += `\n  │ ${runIndex === 0 ? (testIndex + 1).toString().padEnd(5, ' ') : '     '} │ ${(runIndex + 1).toString().padEnd(5, ' ')} │ ${runDuration.toFixed(3).padStart(13, ' ')} │`;
 					}
 					totalRuns++;
 				});
 			});
 			if (this.performance.logFormat === 'table') {
-				performanceTable += '\n  ╰──────┴───────┴───────────────╯';
+				performanceTable += '\n  ╰───────┴───────┴───────────────╯';
 			}
 			averageRunDuration = Number(averageRunDuration / totalRuns);
 			performanceMessage = ` in ${testDuration.toFixed(3)}ms${ totalRuns > 1 ? ` (x̄ ${averageRunDuration.toFixed(3)}ms per run, over ${totalRuns} runs)` : ''}`;
 		}
-		return `${this.result ? this.log.icons[0] : this.log.icons[1]} ${this.log.name} test ${this.result ? 'passed' : 'failed'}${performanceMessage}${this.result && this.performance.logFormat === 'table' ? ':' : '.'}${performanceTable}`;
+		const part1 = `${this.result.passed ? this.log.icons[0] : this.log.icons[1]} ${this.log.name} test ${this.result.passed ? 'passed' : 'failed'}`;
+		const part2 = `${performanceMessage}`;
+		const part3 = `${this.result.passed && this.performance.logFormat === 'table' ? ':' : '.'}${performanceTable}`;
+		const part4 = !this.result.passed && 'expected' in this.result ? `\nExpected: ${this.result.expected}` : '';
+		const part5 = !this.result.passed && 'received' in this.result ? `\nReceived: ${this.result.received}` : '';
+		return part1 + part2 + part3 + part4 + part5;
 	}
 
 	/**
 	 * Log the test result with the appropriate severity.
 	 */
 	private logResult (): void {
-		if (!this.result) {
+		if (!this.result.passed) {
 			if (this.log.severity === Severity.ERROR) {
 				throw new Error(this.logMessage);
 			} else if (this.log.severity === Severity.WARN) {
@@ -200,9 +213,13 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 							this.passing.push(pass);
 							if (!pass) {
 								halt = true;
+								this.result.received = runResult;
+								if (typeof condition !== 'function') {
+									this.result.expected = condition;
+								}
 							}
 						} catch (error) {
-							console.warn('MicroTestRunner: Run failed.', error);
+							console.warn('MicroTestRunner: Run failed with error:\n', error);
 						}
 						this.currentRun++;
 						if (halt) break;
@@ -211,8 +228,8 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 				}
 
 				// Return false if any one of the tests failed.
-				this.result = !this.passing.includes(false);
-				resolve(this.result);
+				this.result.passed = !this.passing.includes(false);
+				resolve(this.result.passed);
 			});
 
 			if (this.log.name) {
@@ -244,9 +261,13 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 					this.passing.push(pass);
 					if (!pass) {
 						halt = true;
+						this.result.received = runResult;
+						if (typeof condition !== 'function') {
+							this.result.expected = condition;
+						}
 					}
 				} catch (error) {
-					console.warn('MicroTestRunner: Run failed.', error);
+					console.warn('MicroTestRunner: Run failed with error:\n', error);
 				}
 				this.currentRun++;
 				if (halt) break;
@@ -255,13 +276,13 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 		}
 
 		// Return false if any one of the tests failed.
-		this.result = !this.passing.includes(false);
+		this.result.passed = !this.passing.includes(false);
 
 		if (this.log.name) {
 			this.logResult();
 		}
 
-		return this.result as Async extends 'async' ? Promise<boolean> : boolean;
+		return this.result.passed as Async extends 'async' ? Promise<boolean> : boolean;
 	}
 }
 
