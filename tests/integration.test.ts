@@ -1,4 +1,4 @@
-import test, { FailureLogSeverity } from '../src/index.js';
+import test, { Severity } from '../src/index.js';
 
 export default function integrationTest (): void {
 
@@ -7,7 +7,7 @@ export default function integrationTest (): void {
 	}
 
 	test(candidate)
-		.logging('Integration', FailureLogSeverity.ERROR, undefined, true)
+		.logging('Integration', Severity.ERROR, undefined, true)
 		.times(3)
 		.with(24, 48)
 		.with(162, 5)
