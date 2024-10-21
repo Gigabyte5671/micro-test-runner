@@ -8,26 +8,27 @@ export enum Severity {
 }
 
 type PerformanceLogFormat = 'average' | 'table';
+type PerformanceMeasurement = { start: number, end: number };
 
 class MicroTestRunner <Async extends 'sync' | 'async'> {
 	private candidate: Function;
 	private log = {
-		name: undefined as string | undefined,
+		name: <string | undefined> undefined,
 		icons: ['✓', '✕'],
 		severity: Severity.LOG
 	};
 	private asynchronous = 'sync' as Async;
 	private candidateContext: any;
-	private args = [] as unknown[][];
-	private conditions = [] as unknown[];
+	private args: unknown[][] = [];
+	private conditions: unknown[] = [];
 	private runs = 1;
 	private currentRun = 0;
 	private performance = {
 		enabled: false,
-		logFormat: 'average' as PerformanceLogFormat,
-		measurements: [] as { start: number, end: number }[][]
+		logFormat: <PerformanceLogFormat> 'average',
+		measurements: <PerformanceMeasurement[][]> []
 	};
-	private passing = [] as boolean[];
+	private passing: boolean[] = [];
 	private result = false;
 
 	constructor (candidate: Function) {
@@ -184,7 +185,7 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 					this.performance.measurements.push([]);
 					while (this.currentRun < this.runs) {
 						try {
-							let runDuration = undefined as number | undefined;
+							let runDuration: number | undefined = undefined;
 							if (this.performance.enabled) {
 								this.performance.measurements[index].push({ start: performance.now(), end: 0 });
 							}
@@ -221,7 +222,7 @@ class MicroTestRunner <Async extends 'sync' | 'async'> {
 			this.performance.measurements.push([]);
 			while (this.currentRun < this.runs) {
 				try {
-					let runDuration = undefined as number | undefined;
+					let runDuration: number | undefined = undefined;
 					if (this.performance.enabled) {
 						this.performance.measurements[index].push({ start: performance.now(), end: 0 });
 					}
