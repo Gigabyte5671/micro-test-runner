@@ -50,11 +50,11 @@ testRunner.async();
 If your function requires a specific context (`this`), chain the `.context` method:
 ```javascript
 class YourClass {
-	public static c = 17;
-	
-	public static yourFunction (a, b) {
-		return a + b + this.c;		// `this` is used by yourFunction.
-	}
+    public static c = 17;
+    
+    public static yourFunction (a, b) {
+        return a + b + this.c;             // `this` is used by yourFunction.
+    }
 }
 
 // ...
@@ -70,13 +70,13 @@ testRunner.with([arg1, arg2, arg3, etc...]);
 ```
 
 <details>
-	<summary>Advanced</summary>
+    <summary>Advanced</summary>
 
 You can chain `.with` methods to run your function multiple times with different arguments:
 ```javascript
-testRunner.with([arg1, arg2])	// Test 1.
-          .with([argA, argB])	// Test 2.
-          .with([argX, argY])	// Test 3.
+testRunner.with([arg1, arg2])    // Test 1.
+          .with([argA, argB])    // Test 2.
+          .with([argX, argY])    // Test 3.
 ```
 </details>
 
@@ -84,7 +84,7 @@ testRunner.with([arg1, arg2])	// Test 1.
 
 Optionally, specify the number of times to run each test:
 ```javascript
-testRunner.times(5);	// Will run each of the sequential tests 5 times.
+testRunner.times(5);    // Will run each of the sequential tests 5 times.
 ```
 
 <br>
@@ -95,7 +95,7 @@ testRunner.expect([result1, result2, result3, etc...]);
 ```
 
 <details>
-	<summary>Advanced</summary>
+    <summary>Advanced</summary>
 
 If a function is passed as an expected result, it will be evaluated on the value that the candidate returned for that particular test. This function should then return a boolean indicating whether the value was correct or not. For example:
 ```javascript
@@ -121,11 +121,11 @@ Alternately, if you'd like Micro Test-Runner to log the results for you, you can
 ```javascript
 import test, { Severity } from 'micro-test-runner';
 
-test(yourFunction)							  // Test `yourFunction`...
-	.times(3)							  // 3 times...
-	.logging('Function Name', Severity.WARN, ['✅', '❌'])		  // Logging the outcome...
-	.with(['Hello', 'world!'])					  // With these arguments...
-	.expect(['Hello world!']);					  // And expect these results.
+test(yourFunction)                                          // Test `yourFunction`...
+    .times(3)                                               // 3 times...
+    .logging('Function Name', Severity.WARN, ['✅', '❌'])  // Logging the outcome...
+    .with(['Hello', 'world!'])                              // With these arguments...
+    .expect(['Hello world!']);                              // And expect these results.
 ```
 This method takes 4 arguments:
 1. The name of the test.
@@ -151,15 +151,15 @@ Basic:
 import test from 'micro-test-runner';
 import { yourFunction } from './yourProject';
 
-const result = test(yourFunction)	// Test `yourFunction`...
-	.times(3)			// 3 times...
-	.with(['Hello', 'world!'])	// With these arguments...
-	.expect(['Hello world!']);	// And expect these results.
+const result = test(yourFunction)  // Test `yourFunction`...
+    .times(3)                      // 3 times...
+    .with(['Hello', 'world!'])     // With these arguments...
+    .expect(['Hello world!']);     // And expect these results.
 
 if (result) {
-	// Your test passed.
+    // Your test passed.
 } else {
-	// Your test failed.
+    // Your test failed.
 }
 ```
 
@@ -169,11 +169,11 @@ Logging:
 import test from 'micro-test-runner';
 import { yourFunction } from './yourProject';
 
-test(yourFunction)			// Test `yourFunction`...
-	.times(3)			// 3 times...
-	.logging('Function Name')	// Logging the outcome...
-	.with(['Hello', 'world!'])	// With these arguments...
-	.expect(['Hello world!']);	// And expect these results.
+test(yourFunction)              // Test `yourFunction`...
+    .times(3)                   // 3 times...
+    .logging('Function Name')   // Logging the outcome...
+    .with(['Hello', 'world!'])  // With these arguments...
+    .expect(['Hello world!']);  // And expect these results.
 ```
 
 Async:
@@ -182,16 +182,16 @@ Async:
 import test from 'micro-test-runner';
 import { apiCall } from './yourProject';
 
-const result = await test(apiCall)			// Test your `apiCall` function...
-	.async()					// Asynchronously...
-	.times(3)					// 3 times...
-	.with(['https://example.com/api', '/endpoint'])	// With these arguments...
-	.expect([{ data: 'Hello world!' }]);		// And expect these results.
+const result = await test(apiCall)                   // Test your `apiCall` function...
+    .async()                                         // Asynchronously...
+    .times(3)                                        // 3 times...
+    .with(['https://example.com/api', '/endpoint'])  // With these arguments...
+    .expect([{ data: 'Hello world!' }]);             // And expect these results.
 
 if (result) {
-	// Your test passed.
+    // Your test passed.
 } else {
-	// Your test failed.
+    // Your test failed.
 }
 ```
 
@@ -201,18 +201,18 @@ Promise:
 import test from 'micro-test-runner';
 import { apiCall } from './yourProject';
 
-test(apiCall)						// Test your `apiCall` function...
-	.async()					// Asynchronously...
-	.times(3)					// 3 times...
-	.with(['https://example.com/api', '/endpoint'])	// With these arguments...
-	.expect([{ data: 'Hello world!' }])		// And expect these results.
-	.then(result => {
-		if (result) {
-			// Your test passed.
-		} else {
-			// Your test failed.
-		}
-	});
+test(apiCall)                                        // Test your `apiCall` function...
+    .async()                                         // Asynchronously...
+    .times(3)                                        // 3 times...
+    .with(['https://example.com/api', '/endpoint'])  // With these arguments...
+    .expect([{ data: 'Hello world!' }])              // And expect these results.
+    .then(result => {
+        if (result) {
+            // Your test passed.
+        } else {
+            // Your test failed.
+        }
+    });
 ```
 
 Performance Logging:
@@ -221,16 +221,16 @@ Performance Logging:
 import test, { Severity } from 'micro-test-runner';
 import { slowFunction } from './yourProject';
 
-test(slowFunction)							// Test `slowFunction`...
-	.times(3)							// 3 times...
-	.with([2, 3])							// With these arguments...
-	.with([4, 1])							// And these arguments...
-	.logging('Slow', Severity.LOG, undefined, 'table') 		// Logging the outcome and performance to a table in the console...
-	.expect([(value, runIndex, duration) => { 			// And expect these results (verified with a function).
-		return
-			value === 5					// Check the value returned by `slowFunction`.
-			&& duration < 200;				// Check that `slowFunction` took less than 200ms.
-	}]);
+test(slowFunction)                                      // Test `slowFunction`...
+    .times(3)                                           // 3 times...
+    .with([2, 3])                                       // With these arguments...
+    .with([4, 1])                                       // And these arguments...
+    .logging('Slow', Severity.LOG, undefined, 'table')  // Logging the outcome and performance to a table in the console...
+    .expect([(value, runIndex, duration) => {           // And expect these results (verified with a function).
+        return
+            value === 5                                 // Check the value returned by `slowFunction`.
+            && duration < 200;                          // Check that `slowFunction` took less than 200ms.
+    }]);
 
 
 /* Console output...
