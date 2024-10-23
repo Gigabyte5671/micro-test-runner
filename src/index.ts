@@ -7,7 +7,7 @@ export enum Severity {
 	ERROR
 }
 
-type Candidate<Async extends 'sync' | 'async', Args extends unknown[], Return = unknown> = (...args: Args) => (Async extends 'async' ? Promise<Return> : Return);
+type Candidate<Args extends unknown[], Return = unknown> = (...args: Args) => Promise<Return> | Return;
 type PerformanceLogFormat = 'average' | 'table';
 type PerformanceMeasurement = { start: number, end: number };
 type Validator<Return = unknown> = Return | ((result: Return, run: number, duration: number) => boolean);
@@ -18,14 +18,13 @@ interface TestResult {
 	received?: unknown;
 };
 
-class MicroTestRunner <Async extends 'sync' | 'async', Args extends unknown[], Return = unknown> {
-	private candidate: Candidate<Async, Args, Return>;
+class MicroTestRunner <Args extends unknown[], Return = unknown> {
+	private candidate: Candidate<Args, Return>;
 	private log = {
 		name: <string | undefined> undefined,
 		icons: ['✓', '✕'],
 		severity: Severity.LOG
 	};
-	private asynchronous = 'sync' as Async;
 	private candidateContext: any;
 	private args: Args[] = [];
 	private conditions: unknown[] = [];
@@ -41,7 +40,7 @@ class MicroTestRunner <Async extends 'sync' | 'async', Args extends unknown[], R
 		passed: false
 	};
 
-	constructor (candidate: Candidate<Async, Args, Return>) {
+	constructor (candidate: Candidate<Args, Return>) {
 		this.candidate = candidate;
 	}
 
@@ -104,8 +103,8 @@ class MicroTestRunner <Async extends 'sync' | 'async', Args extends unknown[], R
 	 * @param candidate The expression/function to test.
 	 * @returns The test-runner.
 	 */
-	static test <Args extends unknown[], Return = unknown> (candidate: Candidate<'sync', Args, Return>): MicroTestRunner<'sync', Args, Return> {
-		return new MicroTestRunner<'sync', Args, Return>(candidate);
+	static test <Args extends unknown[], Return = unknown> (candidate: Candidate<Args, Return>): MicroTestRunner<Args, Return> {
+		return new MicroTestRunner<Args, Return>(candidate);
 	}
 
 	/**
@@ -128,7 +127,7 @@ class MicroTestRunner <Async extends 'sync' | 'async', Args extends unknown[], R
 	 * 
 	 * • `'table'` - A table showing the performance of each run.
 	 */
-	logging (name: string, severity = Severity.LOG, icons?: [string, string], performance: boolean | PerformanceLogFormat = false): MicroTestRunner<Async, Args, Return> {
+	logging (name: string, severity = Severity.LOG, icons?: [string, string], performance: boolean | PerformanceLogFormat = false): MicroTestRunner<Args, Return> {
 		this.log.name = name;
 		this.log.severity = severity;
 		if (Array.isArray(icons) && icons.length === 2) {
@@ -142,18 +141,10 @@ class MicroTestRunner <Async extends 'sync' | 'async', Args extends unknown[], R
 	}
 
 	/**
-	 * Run each test asynchronously.
-	 */
-	async (): MicroTestRunner<'async', Args, Return> {
-		this.asynchronous = 'async' as Async;
-		return this as MicroTestRunner<'async', Args, Return>;
-	}
-
-	/**
 	 * Run the candidate function within a given context. Useful if the candidate needs access to a particular `this`.
 	 * @param context The context.
 	 */
-	context (context: any): MicroTestRunner<Async, Args, Return> {
+	context (context: any): MicroTestRunner<Args, Return> {
 		this.candidateContext = context;
 		return this;
 	}
@@ -162,7 +153,7 @@ class MicroTestRunner <Async extends 'sync' | 'async', Args extends unknown[], R
 	 * Run each test multiple times.
 	 * @param number The number of times to run each test.
 	 */
-	times (number: number): MicroTestRunner<Async, Args, Return> {
+	times (number: number): MicroTestRunner<Args, Return> {
 		this.runs = Math.max(Math.ceil(number), 1);
 		return this;
 	}
@@ -171,7 +162,7 @@ class MicroTestRunner <Async extends 'sync' | 'async', Args extends unknown[], R
 	 * Provide arguments to the candidate.
 	 * @param args The arguments.
 	 */
-	with (...args: Args): MicroTestRunner<Async, Args, Return> {
+	with (...args: Args): MicroTestRunner<Args, Return> {
 		this.args.push(args);
 		return this;
 	}
@@ -181,64 +172,13 @@ class MicroTestRunner <Async extends 'sync' | 'async', Args extends unknown[], R
 	 * @param conditions The expected results.
 	 * @returns `true` if all test runs passed, `false` if any run failed.
 	 */
-	expect (...conditions: Validator<Awaited<Return>>[]): Async extends 'async' ? Promise<boolean> : boolean {
+	async expect (...conditions: Validator<Awaited<Return>>[]): Promise<boolean> {
 		this.conditions = conditions;
 
 		if (!this.args.length) {
 			this.args.push([] as unknown as Args);
 		}
 
-		// Asynchronous:
-		if (this.asynchronous === 'async') {
-			const promise = new Promise<boolean>(async (resolve) => {
-				let halt = false;
-				for (const [index, argumentGroup] of this.args.entries()) {
-					this.currentRun = 0;
-					this.performance.measurements.push([]);
-					while (this.currentRun < this.runs) {
-						try {
-							let runDuration: number | undefined = undefined;
-							if (this.performance.enabled) {
-								this.performance.measurements[index].push({ start: performance.now(), end: 0 });
-							}
-							const runResult = await Promise.resolve(this.candidate.apply(this.candidateContext, argumentGroup));
-							if (this.performance.enabled) {
-								this.performance.measurements[index][this.currentRun].end = performance.now();
-								runDuration = this.performance.measurements[index][this.currentRun].end - this.performance.measurements[index][this.currentRun].start;
-							}
-							const condition = this.conditions[Math.min(index, this.conditions.length - 1)];
-							const pass = typeof condition === 'function' ? condition(runResult, this.currentRun, runDuration) : runResult === condition;
-							this.passing.push(pass);
-							if (!pass) {
-								halt = true;
-								this.result.received = runResult;
-								if (typeof condition !== 'function') {
-									this.result.expected = condition;
-								}
-							}
-						} catch (error) {
-							console.warn('MicroTestRunner: Run failed with error:\n', error);
-						}
-						this.currentRun++;
-						if (halt) break;
-					}
-					if (halt) break;
-				}
-
-				// Return false if any one of the tests failed.
-				this.result.passed = !this.passing.includes(false);
-				resolve(this.result.passed);
-			});
-
-			if (this.log.name) {
-				promise.then(() => this.logResult());
-			}
-
-			// Return a reference to the promise.
-			return promise as Async extends 'async' ? Promise<boolean> : boolean;
-		}
-
-		// Synchronous:
 		let halt = false;
 		for (const [index, argumentGroup] of this.args.entries()) {
 			this.currentRun = 0;
@@ -249,7 +189,7 @@ class MicroTestRunner <Async extends 'sync' | 'async', Args extends unknown[], R
 					if (this.performance.enabled) {
 						this.performance.measurements[index].push({ start: performance.now(), end: 0 });
 					}
-					const runResult = this.candidate.apply(this.candidateContext, argumentGroup);
+					const runResult = await Promise.resolve(this.candidate.apply(this.candidateContext, argumentGroup));
 					if (this.performance.enabled) {
 						this.performance.measurements[index][this.currentRun].end = performance.now();
 						runDuration = this.performance.measurements[index][this.currentRun].end - this.performance.measurements[index][this.currentRun].start;
@@ -280,7 +220,7 @@ class MicroTestRunner <Async extends 'sync' | 'async', Args extends unknown[], R
 			this.logResult();
 		}
 
-		return this.result.passed as Async extends 'async' ? Promise<boolean> : boolean;
+		return this.result.passed;
 	}
 }
 

@@ -1,9 +1,9 @@
 import test, { Severity } from '../src/index.js';
 
 export default function failureTest (): void {
-	function candidate (): string {
+	async function candidate (): Promise<string> {
 		try {
-			test((a: any, b: any) => a + b)
+			await test((a: any, b: any) => a + b)
 				.logging('Failure Candidate', Severity.ERROR, undefined, true)
 				.times(3)
 				.with(196.5, 42)

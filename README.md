@@ -40,13 +40,6 @@ const testRunner = test(yourFunction);
 
 <br>
 
-If your function is asynchronous, chain the `.async` method:
-```javascript
-testRunner.async();
-```
-
-<br>
-
 If your function requires a specific context (`this`), chain the `.context` method:
 ```javascript
 class YourClass {
@@ -109,12 +102,7 @@ testRunner.expect(result1, result2, (value) => value typeof 'number');
 
 Calling `.expect` will run the test(s), returning `true` if your function passes, `false` if not.
 ```javascript
-const outcome = testRunner.expect(result1, result2);
-```
-
-If your function is asynchronous, you will need to `await` this value or use `.then()`.
-```javascript
-const outcome = await testRunner.async().expect(result1, result2);
+const outcome = await testRunner.expect(result1, result2);
 ```
 
 Alternately, if you'd like Micro Test-Runner to log the results for you, you can chain the `.logging()` method.
@@ -176,14 +164,13 @@ test(yourFunction)              // Test `yourFunction`...
     .expect('Hello world!');    // And expect these results.
 ```
 
-Async:
+With result:
 
 ```javascript
 import test from 'micro-test-runner';
 import { apiCall } from './yourProject';
 
 const result = await test(apiCall)                   // Test your `apiCall` function...
-    .async()                                         // Asynchronously...
     .times(3)                                        // 3 times...
     .with('https://example.com/api', '/endpoint')    // With these arguments...
     .expect({ data: 'Hello world!' });               // And expect these results.
@@ -195,14 +182,13 @@ if (result) {
 }
 ```
 
-Promise:
+With result (promise):
 
 ```javascript
 import test from 'micro-test-runner';
 import { apiCall } from './yourProject';
 
 test(apiCall)                                        // Test your `apiCall` function...
-    .async()                                         // Asynchronously...
     .times(3)                                        // 3 times...
     .with('https://example.com/api', '/endpoint')    // With these arguments...
     .expect({ data: 'Hello world!' })                // And expect these results.

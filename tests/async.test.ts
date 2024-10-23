@@ -10,7 +10,6 @@ export default function asyncTest (): void {
 
 	test(candidate)
 		.logging('Async Logging', 2, undefined, true)
-		.async()
 		.times(6)
 		.with(24, 48)
 		.with(162, 5)

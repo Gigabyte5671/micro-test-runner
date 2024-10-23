@@ -10,7 +10,6 @@ export default function performanceTest (): void {
 
 	test(candidate)
 		.logging('Performance', Severity.WARN, undefined, 'table')
-		.async()
 		.times(3)
 		.with()
 		.with()
