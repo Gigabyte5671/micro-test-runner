@@ -96,7 +96,7 @@ class MicroTestRunner <Async extends 'sync' | 'async', Args extends unknown[], R
 				return;
 			}
 		}
-		console.log(this.logMessage);
+		console.info(this.logMessage);
 	}
 
 	/**
