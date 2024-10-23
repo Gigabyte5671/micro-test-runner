@@ -14,7 +14,7 @@ export default function asyncTest (): void {
 		.times(6)
 		.with(24, 48)
 		.with(162, 5)
-		.expect(72, (value: number) => (/[0-9]+/u).test(value.toString()))
+		.expect(72, value => (/[0-9]+/u).test(value.toString()))
 		.then(result => {
 			if (!result) {
 				throw new Error('✕ Async test failed.');

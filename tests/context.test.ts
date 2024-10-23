@@ -16,5 +16,5 @@ export default function contextTest (): void {
 		.times(3)
 		.with(24, 48)
 		.with(162, 5)
-		.expect(89, (value: number) => (/[0-9]+/u).test(value.toString()));
+		.expect(89, value => (/[0-9]+/u).test(value.toString()));
 }

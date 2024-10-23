@@ -3,7 +3,7 @@ import test, { Severity } from '../src/index.js';
 export default function failureTest (): void {
 	function candidate (): string {
 		try {
-			test((a: number, b: number) => a + b)
+			test((a: any, b: any) => a + b)
 				.logging('Failure Candidate', Severity.ERROR, undefined, true)
 				.times(3)
 				.with(196.5, 42)
@@ -20,5 +20,5 @@ export default function failureTest (): void {
 	test(candidate)
 		.logging('Failure', Severity.ERROR, undefined, true)
 		.times(3)
-		.expect((error: string) => error.startsWith('Error: ✕ Failure Candidate test failed.\nExpected: 9\nReceived: Hello world'));
+		.expect(error => error.startsWith('Error: ✕ Failure Candidate test failed.\nExpected: 9\nReceived: Hello world'));
 }
