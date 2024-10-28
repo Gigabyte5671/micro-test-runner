@@ -41,53 +41,53 @@
 
 		<div class="panels">
 			<div class="panel">
-				<p><span class="op">import</span> <span class="arg">test</span> <span class="op">from</span> <span class="string">'micro-test-runner'</span>;</p>
+				<p><span class="op">import</span> <span class="function">test</span> <span class="op">from</span> <span class="string">'micro-test-runner'</span>;</p>
 				<p><span class="op">import</span> { <span class="arg">yourFunction</span> } <span class="op">from</span> <span class="string">'yourProject'</span>;</p>
 				<br>
 				<p><span class="faint">console.log(</span></p>
 				<br>
 				<p><span class="function">test</span>(<span class="arg">yourFunction</span>)<span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment">// Test yourFunction&hellip;</span></p>
 				<p><span class="indent"></span>.<span class="function">times</span>(<span class="number">3</span>)<span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span> <span class="comment">// Three times&hellip;</span></p>
-				<p><span class="indent"></span>.<span class="function">with</span>([<span class="string">'Hello'</span>, <span class="string">'world'</span>])<span class="indent"></span><span class="comment"> // With these arguments&hellip;</span></p>
-				<p><span class="indent"></span>.<span class="function">expect</span>([<span class="string">'Hello world'</span>])<span class="indent"></span><span class="indent"></span><span class="comment">// And expect these results.</span></p>
+				<p><span class="indent"></span>.<span class="function">with</span>(<span class="string">'Hello'</span>, <span class="string">'world'</span>)<span class="indent"></span><span class="indent"></span><span class="comment"> // With these arguments&hellip;</span></p>
+				<p><span class="indent"></span>.<span class="function">expect</span>(<span class="string">'Hello world'</span>)<span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment">// And expect these results.</span></p>
 				<br>
 				<p><span class="faint">);</span></p>
 			</div>
 			<div class="panel">
-				<p><span class="op">import</span> <span class="arg">test</span> <span class="op">from</span> <span class="string">'micro-test-runner'</span>;</p>
+				<p><span class="op">import</span> <span class="function">test</span> <span class="op">from</span> <span class="string">'micro-test-runner'</span>;</p>
 				<p><span class="op">import</span> { <span class="arg">yourFunction</span> } <span class="op">from</span> <span class="string">'yourProject'</span>;</p>
+				<br>
 				<br>
 				<br>
 				<p><span class="function">test</span>(<span class="arg">yourFunction</span>)<span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment">// Test yourFunction&hellip;</span></p>
 				<p class="highlighted"><span class="indent"></span>.<span class="function">logging</span>(<span class="string">'Awesome'</span>) <span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment">// Logging the outcome&hellip;</span><span class="indent"></span></p>
-				<p><span class="indent"></span>.<span class="function">with</span>([<span class="string">'Hello'</span>, <span class="string">'world'</span>])<span class="indent"></span><span class="comment"> // With these arguments&hellip;</span></p>
-				<p><span class="indent"></span>.<span class="function">expect</span>([<span class="string">'Hello world'</span>]); <span class="indent"></span><span class="comment">// And expect these results.</span></p>
+				<p><span class="indent"></span>.<span class="function">with</span>(<span class="string">'Hello'</span>, <span class="string">'world'</span>)<span class="indent"></span><span class="indent"></span><span class="comment"> // With these arguments&hellip;</span></p>
+				<p><span class="indent"></span>.<span class="function">expect</span>(<span class="string">'Hello world'</span>); <span class="indent"></span><span class="indent"></span><span class="comment">// And expect these results.</span></p>
 			</div>
 			<div class="panel">
-				<p><span class="op">import</span> <span class="arg">test</span> <span class="op">from</span> <span class="string">'micro-test-runner'</span>;</p>
+				<p><span class="op">import</span> <span class="function">test</span> <span class="op">from</span> <span class="string">'micro-test-runner'</span>;</p>
 				<p><span class="op">import</span> { <span class="arg">apiCall</span> } <span class="op">from</span> <span class="string">'yourProject'</span>;</p>
 				<br>
 				<br>
 				<p><span class="op">await</span> <span class="function">test</span>(<span class="arg">apiCall</span>) <span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment">// Test your api call&hellip;</span></p>
 				<p class="highlighted"><span class="indent"></span>.<span class="function">async</span>()<span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment">// Asynchronously&hellip;</span><span class="indent"></span></p>
 				<p><span class="indent"></span>.<span class="function">logging</span>(<span class="string">'API'</span>) <span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment">// Logging the outcome&hellip;</span></p>
-				<p><span class="indent"></span>.<span class="function">with</span>([<span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment"> // With these arguments&hellip;</span></p>
+				<p><span class="indent"></span>.<span class="function">with</span>(<span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment">// With these arguments&hellip;</span></p>
 				<p><span class="indent"></span><span class="indent"></span><span class="string">'https://example.com/api'</span>,</p>
 				<p><span class="indent"></span><span class="indent"></span><span class="string">'/endpoint'</span></p>
-				<p><span class="indent"></span>])</p>
-				<p><span class="indent"></span>.<span class="function">expect</span>([<span class="string">'Hello world'</span>]); <span class="indent"></span><span class="comment">// And expect these results.</span></p>
+				<p><span class="indent"></span>)</p>
+				<p><span class="indent"></span>.<span class="function">expect</span>(<span class="string">'Hello world'</span>); <span class="indent"></span><span class="indent"></span><span class="comment">// And expect these results.</span></p>
 			</div>
 			<div class="panel">
-				<p><span class="op">import</span> <span class="arg">test</span>, { <span class="arg">FailureLogSeverity</span> } <span class="op">from</span> <span class="string">'micro-test-runner'</span>;</p>
+				<p><span class="op">import</span> <span class="function">test</span> <span class="op">from</span> <span class="string">'micro-test-runner'</span>;</p>
 				<p><span class="op">import</span> <span class="class">YourClass</span> <span class="op">from</span> <span class="string">'yourProject'</span>;</p>
 				<br>
 				<br>
-				<p><span class="function">test</span>(<span class="arg"><span class="class">YourClass</span>.<span class="function">method</span></span>)<span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment">// Test your method&hellip;</span></p>
-				<p class="highlighted"><span class="indent"></span>.<span class="function">context</span>(<span class="class">YourClass</span>) <span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment">// In this context&hellip;</span><span class="indent"></span></p>
-				<p><span class="indent"></span>.<span class="function">logging</span>(<span class="string">'Classy'</span>,<span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment">// Logging failures as errors&hellip;</span></p>
-				<p><span class="indent"></span><span class="indent"></span><span class="arg">FailureLogSeverity</span>.<span class="key">ERROR</span>)</p>
-				<p><span class="indent"></span>.<span class="function">with</span>([<span class="string">'Hello'</span>, <span class="string">'world'</span>])<span class="indent"></span><span class="comment"> // With these arguments&hellip;</span></p>
-				<p><span class="indent"></span>.<span class="function">expect</span>([<span class="string">'Hello world'</span>]); <span class="indent"></span><span class="comment">// And expect these results.</span></p>
+				<p><span class="function">test</span>(<span class="arg"><span class="class">YourClass</span>.<span class="function">method</span></span>)<span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment"> // Test your method&hellip;</span></p>
+				<p class="highlighted"><span class="indent"></span>.<span class="function">context</span>(<span class="class">YourClass</span>) <span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment"> // In this context&hellip;</span><span class="indent"></span></p>
+				<p><span class="indent"></span>.<span class="function">logging</span>(<span class="string">'Classy'</span>, <span class="string">'error'</span>)<span class="indent"></span><span class="comment">// Logging failures as errors&hellip;</span></p>
+				<p><span class="indent"></span>.<span class="function">with</span>(<span class="string">'Hello'</span>, <span class="string">'world'</span>)<span class="indent"></span><span class="indent"></span><span class="indent"></span><span class="comment">// With these arguments&hellip;</span></p>
+				<p><span class="indent"></span>.<span class="function">expect</span>(<span class="string">'Hello world'</span>); <span class="indent"></span><span class="indent"></span><span class="comment"> // And expect these results.</span></p>
 			</div>
 		</div>
 
