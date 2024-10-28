@@ -1,4 +1,4 @@
-import test, { Severity } from '../src/index.js';
+import test from '../src/index.js';
 
 export default function performanceTest (): void {
 
@@ -9,7 +9,7 @@ export default function performanceTest (): void {
 	}
 
 	test(candidate)
-		.logging('Performance', Severity.WARN, undefined, 'table')
+		.logging('Performance', 'error', undefined, 'table')
 		.times(3)
 		.with()
 		.with()

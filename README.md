@@ -107,24 +107,23 @@ const outcome = await testRunner.expect(result1, result2);
 
 Alternately, if you'd like Micro Test-Runner to log the results for you, you can chain the `.logging()` method.
 ```javascript
-import test, { Severity } from 'micro-test-runner';
+import test from 'micro-test-runner';
 
-test(yourFunction)                                          // Test `yourFunction`...
-    .times(3)                                               // 3 times...
-    .logging('Function Name', Severity.WARN, ['✅', '❌'])  // Logging the outcome...
-    .with('Hello', 'world!')                                // With these arguments...
-    .expect('Hello world!');                                // And expect these results.
+test(yourFunction)                                    // Test `yourFunction`...
+    .times(3)                                         // 3 times...
+    .logging('Function Name', 'warn', ['✅', '❌'])  // Logging the outcome...
+    .with('Hello', 'world!')                          // With these arguments...
+    .expect('Hello world!');                          // And expect these results.
 ```
 This method takes 4 arguments:
 1. The name of the test.
 2. `(Optional)` The severity used to log the test's failure. There are 3 options for this argument:
-   - `LOG` - Logs test results to the console.
-   - `WARN` - Same as `LOG`, but failures will appear as warnings.
-   - `ERROR` - Same as `LOG`, but failures will throw an error.
+   - `'log'` - Logs test results to the console.
+   - `'warn'` - Same as `'log'`, but failures will appear as warnings.
+   - `'error'` - Same as `'log'`, but failures will throw an error.
 3. `(Optional)` Icons used to visually indicate the outcome of the test.
 4. `(Optional)` Log the performance of each test run in the desired format:
-   - `true` - Average of all runs.
-   - `'average'` - Average of all runs.
+   - `'average'` - The average of all runs.
    - `'table'` - A table showing the performance of each individual run.
 
 The `logging()` method removes the need to handle the value returned from `.expect()`.
@@ -204,18 +203,18 @@ test(apiCall)                                        // Test your `apiCall` func
 Performance Logging:
 
 ```javascript
-import test, { Severity } from 'micro-test-runner';
+import test from 'micro-test-runner';
 import { slowFunction } from './yourProject';
 
-test(slowFunction)                                      // Test `slowFunction`...
-    .times(3)                                           // 3 times...
-    .with(2, 3)                                         // With these arguments...
-    .with(4, 1)                                         // And these arguments...
-    .logging('Slow', Severity.LOG, undefined, 'table')  // Logging the outcome and performance to a table in the console...
-    .expect((value, runIndex, duration) => {            // And expect these results (verified with a function).
+test(slowFunction)                               // Test `slowFunction`...
+    .times(3)                                    // 3 times...
+    .with(2, 3)                                  // With these arguments...
+    .with(4, 1)                                  // And these arguments...
+    .logging('Slow', 'log', undefined, 'table')  // Logging the outcome and performance to a table in the console...
+    .expect((value, runIndex, duration) => {     // And expect these results (verified with a function).
         return
-            value === 5                                 // Check the value returned by `slowFunction`.
-            && duration < 200;                          // Check that `slowFunction` took less than 200ms.
+            value === 5                          // Check the value returned by `slowFunction`.
+            && duration < 200;                   // Check that `slowFunction` took less than 200ms.
     });
 
 

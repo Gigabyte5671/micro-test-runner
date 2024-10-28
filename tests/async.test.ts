@@ -9,7 +9,7 @@ export default function asyncTest (): void {
 	}
 
 	test(candidate)
-		.logging('Async Logging', 2, undefined, true)
+		.logging('Async Logging', 'error', undefined, 'average')
 		.times(6)
 		.with(24, 48)
 		.with(162, 5)

@@ -1,14 +1,6 @@
-/**
- * The severity with which to log test failures.
- */
-export enum Severity {
-	LOG,
-	WARN,
-	ERROR
-}
-
 type Candidate<Args extends unknown[], Return = unknown> = (...args: Args) => Promise<Return> | Return;
-type PerformanceLogFormat = 'average' | 'table';
+type FailureSeverity = 'log' | 'warn' | 'error';
+type PerformanceLogFormat = 'none' | 'average' | 'table';
 type PerformanceMeasurement = { start: number, end: number };
 type Validator<Return = unknown> = Return | ((result: Return, run: number, duration: number) => boolean);
 
@@ -23,7 +15,7 @@ class MicroTestRunner <Args extends unknown[], Return = unknown> {
 	private log = {
 		name: <string | undefined> undefined,
 		icons: ['✓', '✕'],
-		severity: Severity.LOG
+		severity: <FailureSeverity> 'log'
 	};
 	private candidateContext: any;
 	private args: Args[] = [];
@@ -31,8 +23,7 @@ class MicroTestRunner <Args extends unknown[], Return = unknown> {
 	private runs = 1;
 	private currentRun = 0;
 	private performance = {
-		enabled: false,
-		logFormat: <PerformanceLogFormat> 'average',
+		format: <PerformanceLogFormat> 'none',
 		measurements: <PerformanceMeasurement[][]> []
 	};
 	private passing: boolean[] = [];
@@ -47,8 +38,8 @@ class MicroTestRunner <Args extends unknown[], Return = unknown> {
 	private get logMessage (): string {
 		let performanceMessage = '';
 		let performanceTable = '';
-		if (this.result.passed && this.performance.enabled && this.performance.measurements.length > 0) {
-			if (this.performance.logFormat === 'table') {
+		if (this.result.passed && this.performance.format !== 'none' && this.performance.measurements.length > 0) {
+			if (this.performance.format === 'table') {
 				performanceTable = '\n  ╭───────┬───────┬───────────────╮\n  │ Test  │ Run   │ Duration (ms) │';
 			}
 			const startTimestamp = this.performance.measurements[0][0].start;
@@ -57,19 +48,19 @@ class MicroTestRunner <Args extends unknown[], Return = unknown> {
 			let averageRunDuration = 0;
 			let totalRuns = 0;
 			this.performance.measurements.forEach((test, testIndex) => {
-				if (this.performance.logFormat === 'table') {
+				if (this.performance.format === 'table') {
 					performanceTable += '\n  ├───────┼───────┼───────────────┤';
 				}
 				test.forEach((run, runIndex) => {
 					const runDuration = run.end - run.start;
 					averageRunDuration += runDuration;
-					if (this.performance.logFormat === 'table') {
+					if (this.performance.format === 'table') {
 						performanceTable += `\n  │ ${runIndex === 0 ? (testIndex + 1).toString().padEnd(5, ' ') : '     '} │ ${(runIndex + 1).toString().padEnd(5, ' ')} │ ${runDuration.toFixed(3).padStart(13, ' ')} │`;
 					}
 					totalRuns++;
 				});
 			});
-			if (this.performance.logFormat === 'table') {
+			if (this.performance.format === 'table') {
 				performanceTable += '\n  ╰───────┴───────┴───────────────╯';
 			}
 			averageRunDuration = Number(averageRunDuration / totalRuns);
@@ -77,7 +68,7 @@ class MicroTestRunner <Args extends unknown[], Return = unknown> {
 		}
 		const part1 = `${this.result.passed ? this.log.icons[0] : this.log.icons[1]} ${this.log.name} test ${this.result.passed ? 'passed' : 'failed'}`;
 		const part2 = `${performanceMessage}`;
-		const part3 = `${this.result.passed && this.performance.logFormat === 'table' ? ':' : '.'}${performanceTable}`;
+		const part3 = `${this.result.passed && this.performance.format === 'table' ? ':' : '.'}${performanceTable}`;
 		const part4 = !this.result.passed && 'expected' in this.result ? `\nExpected: ${this.result.expected}` : '';
 		const part5 = !this.result.passed && 'received' in this.result ? `\nReceived: ${this.result.received}` : '';
 		return part1 + part2 + part3 + part4 + part5;
@@ -88,9 +79,9 @@ class MicroTestRunner <Args extends unknown[], Return = unknown> {
 	 */
 	private logResult (): void {
 		if (!this.result.passed) {
-			if (this.log.severity === Severity.ERROR) {
+			if (this.log.severity === 'error') {
 				throw new Error(this.logMessage);
-			} else if (this.log.severity === Severity.WARN) {
+			} else if (this.log.severity === 'warn') {
 				console.warn(this.logMessage);
 				return;
 			}
@@ -110,32 +101,26 @@ class MicroTestRunner <Args extends unknown[], Return = unknown> {
 	/**
 	 * Automatically log the outcome of the test.
 	 * @param name The name of the test.
-	 * @param severity `(Optional)` The severity used to log the test's failure.
-	 * 
-	 * • `0 - console.log`
-	 * 
-	 * • `1 - console.warn`
-	 * 
-	 * • `2 - throw`
+	 * @param severity `(Optional)` The severity used to log the test's failure. Either `'log'`, `'warn'`, or `'error'`.
 	 * @param icons `(Optional)` Icons used to visually indicate the outcome of the test.
 	 * Default: `['✓', '✕']`.
 	 * @param performance `(Optional)` Log the performance of each test run in the desired format:
 	 * 
-	 * • `true` - Average of all runs.
-	 * 
-	 * • `'average'` - Average of all runs.
+	 * • `'average'` - The average of all runs.
 	 * 
 	 * • `'table'` - A table showing the performance of each run.
 	 */
-	logging (name: string, severity = Severity.LOG, icons?: [string, string], performance: boolean | PerformanceLogFormat = false): MicroTestRunner<Args, Return> {
+	logging (name: string, severity: FailureSeverity = 'log', icons?: [string, string], performance: PerformanceLogFormat = 'none'): MicroTestRunner<Args, Return> {
 		this.log.name = name;
 		this.log.severity = severity;
 		if (Array.isArray(icons) && icons.length === 2) {
 			this.log.icons = icons;
 		}
-		this.performance.enabled = Boolean(performance) && Boolean(globalThis.performance);
+		if (globalThis.performance) {
+			this.performance.format = performance;
+		}
 		if (typeof performance === 'string') {
-			this.performance.logFormat = performance;
+			this.performance.format = performance;
 		}
 		return this;
 	}
@@ -186,11 +171,11 @@ class MicroTestRunner <Args extends unknown[], Return = unknown> {
 			while (this.currentRun < this.runs) {
 				try {
 					let runDuration: number | undefined = undefined;
-					if (this.performance.enabled) {
+					if (this.performance.format !== 'none') {
 						this.performance.measurements[index].push({ start: performance.now(), end: 0 });
 					}
 					const runResult = await Promise.resolve(this.candidate.apply(this.candidateContext, argumentGroup));
-					if (this.performance.enabled) {
+					if (this.performance.format !== 'none') {
 						this.performance.measurements[index][this.currentRun].end = performance.now();
 						runDuration = this.performance.measurements[index][this.currentRun].end - this.performance.measurements[index][this.currentRun].start;
 					}

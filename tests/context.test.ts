@@ -12,7 +12,7 @@ export default function contextTest (): void {
 
 	test(CandidateClass.candidate)
 		.context(CandidateClass)
-		.logging('Context', 2)
+		.logging('Context', 'error')
 		.times(3)
 		.with(24, 48)
 		.with(162, 5)
