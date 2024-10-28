@@ -2,6 +2,7 @@
 	--color-text: white;
 	--color-background: #1e1e1e;
 	--color-tab-selected: hsla(195, 100%, 50%, 0.65);
+	--color-tab-hover: #fff1;
 }
 
 *,
@@ -30,6 +31,32 @@ body {
 	background-color: var(--color-background);
 	background: radial-gradient(circle at center, #2d2d2d, var(--color-background));
 	background-attachment: fixed;
+}
+
+body > *:not(.background) {
+	z-index: 1;
+}
+
+body > .background {
+	position: fixed;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	overflow: hidden;
+	pointer-events: none;
+}
+body > .background::before {
+	content: '';
+	position: absolute;
+	width: 300%;
+	height: 300%;
+	background:
+		linear-gradient(0deg, black 50%, transparent 50%),
+		linear-gradient(90deg, var(--color-tab-selected) 1px, black 1px);
+	background-size: 100% 15px, 13px 100%;
+	transform: rotate(30deg);
+	mix-blend-mode: screen;
+	mask-image: radial-gradient(circle at center, transparent 20%, black);
 }
 
 header {
@@ -191,6 +218,9 @@ span.error {
 		50% 100%
 	);
 	pointer-events: none;
+}
+.tabs > label:hover {
+	background-color: var(--color-tab-hover);
 }
 input[type="radio"] {
 	position: absolute;
