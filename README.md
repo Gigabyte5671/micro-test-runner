@@ -75,10 +75,16 @@ testRunner.with(arg1, arg2)    // Test 1.
 
 <br>
 
-Optionally, specify the number of times to run each test:
+Optionally, specify the number of times to run the test:
 ```javascript
-testRunner.times(5);    // Will run each of the sequential tests 5 times.
+testRunner.times(5);    // Run the test 5 times.
 ```
+
+<details>
+    <summary>Advanced</summary>
+
+If you chained multiple `.with` methods, `.times(n)` will run the test `n` times for each set of arguments.
+</details>
 
 <br>
 
@@ -126,29 +132,9 @@ This method takes 4 arguments:
    - `'average'` - The average of all runs.
    - `'table'` - A table showing the performance of each individual run.
 
-The `logging()` method removes the need to handle the value returned from `.expect()`.
-
 <br>
 
 ## Examples
-
-Basic:
-
-```javascript
-import test from 'micro-test-runner';
-import { yourFunction } from './yourProject';
-
-const result = test(yourFunction)  // Test `yourFunction`...
-    .times(3)                      // 3 times...
-    .with('Hello', 'world!')       // With these arguments...
-    .expect('Hello world!');       // And expect these results.
-
-if (result) {
-    // Your test passed.
-} else {
-    // Your test failed.
-}
-```
 
 Logging:
 
@@ -172,7 +158,7 @@ import { apiCall } from './yourProject';
 const result = await test(apiCall)                   // Test your `apiCall` function...
     .times(3)                                        // 3 times...
     .with('https://example.com/api', '/endpoint')    // With these arguments...
-    .expect({ data: 'Hello world!' });               // And expect these results.
+    .expect('Hello internet!');                      // And expect these results.
 
 if (result) {
     // Your test passed.
@@ -190,7 +176,7 @@ import { apiCall } from './yourProject';
 test(apiCall)                                        // Test your `apiCall` function...
     .times(3)                                        // 3 times...
     .with('https://example.com/api', '/endpoint')    // With these arguments...
-    .expect({ data: 'Hello world!' })                // And expect these results.
+    .expect('Hello internet!')                       // And expect these results.
     .then(result => {
         if (result) {
             // Your test passed.
