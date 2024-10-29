@@ -6,8 +6,8 @@
   "types": "./dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "test": "tsc --build tsconfig.test.json && node test_build/tests/index.js",
-    "build": "tsc --build tsconfig.json"
+    "test": "tsc --build tsconfig.test.json && node post-build.js ./test_build/src/index.js && node test_build/tests/index.js",
+    "build": "tsc --build tsconfig.json && node post-build.js ./dist/index.js"
   },
   "repository": {
     "type": "git",
