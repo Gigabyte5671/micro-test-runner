@@ -66,11 +66,16 @@ class MicroTestRunner <Args extends unknown[], Return = unknown> {
 			averageRunDuration = Number(averageRunDuration / totalRuns);
 			performanceMessage = ` in ${testDuration.toFixed(3)}ms${ totalRuns > 1 ? ` (x̄ ${averageRunDuration.toFixed(3)}ms per run, over ${totalRuns} runs)` : ''}`;
 		}
+		const wrap = typeof this.result.expected === 'string' && /[\r\n]/.test(this.result.expected);
 		const part1 = `${this.result.passed ? this.log.icons[0] : this.log.icons[1]} ${this.log.name} test ${this.result.passed ? 'passed' : 'failed'}`;
 		const part2 = `${performanceMessage}`;
 		const part3 = `${this.result.passed && this.performance.format === 'table' ? ':' : '.'}${performanceTable}`;
-		const part4 = !this.result.passed && 'expected' in this.result ? `\nExpected: ${this.result.expected}` : '';
-		const part5 = !this.result.passed && 'received' in this.result ? `\nReceived: ${this.result.received}` : '';
+		const part4 = !this.result.passed && 'expected' in this.result
+			? `\nExpected:${wrap ? '\n' : ' '}${this.result.expected}`
+			: '';
+		const part5 = !this.result.passed && 'received' in this.result
+			? `\nReceived:${wrap ? '\n' : ' '}${this.result.received}`
+			: '';
 		return part1 + part2 + part3 + part4 + part5;
 	}
 
